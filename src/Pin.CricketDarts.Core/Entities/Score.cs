@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Pin.CricketDarts.Core.Entities
 {
-    public class Player : BaseEntity
+    public class Score : BaseEntity
     {
-        public string Name { get; set; }
-        public PersonalStatistics PersonalStatistics { get; set; }
+        public Guid PlayerId { get; set; }
+        public int TotalScore { get; set; }
     }
 }
