@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Pin.CricketDarts.Core\Pin.CricketDarts.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Seeding\" />
+  </ItemGroup>
+
 </Project>

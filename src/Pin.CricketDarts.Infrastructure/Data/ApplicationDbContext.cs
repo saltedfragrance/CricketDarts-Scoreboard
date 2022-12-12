@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pin.CricketDarts.Infrastructure
+namespace Pin.CricketDarts.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<Player> Playeers { get; set; }
+        public DbSet<Player> Players { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<PersonalStatistics> PlayerStatistics { get; set; }
         public DbSet<Score> Score { get; set; }
