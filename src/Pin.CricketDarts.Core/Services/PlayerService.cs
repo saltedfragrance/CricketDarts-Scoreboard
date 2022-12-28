@@ -19,12 +19,20 @@ namespace Pin.CricketDarts.Core.Services
             _playerRepository = playerRepository;
         }
 
-        public async Task AddAsync(PlayerRequestDto albumRequest)
+        public async Task AddAsync(PlayerRequestDto playerRequestDto)
         {
             var player = new Player
             {
-                Id = new Guid(),
-                Name = albumRequest.Name,
+                Id = playerRequestDto.Id,
+                Name = playerRequestDto.Name,
+                PersonalStatistics = new PersonalStatistics
+                {
+                    Id = playerRequestDto.PersonalStatistics.Id,
+                    DoublesThrown = playerRequestDto.PersonalStatistics.DoublesThrown,
+                    GamesLost = playerRequestDto.PersonalStatistics.GamesLost,
+                    GamesWon = playerRequestDto.PersonalStatistics.GamesWon,
+                    TriplesThrown = playerRequestDto.PersonalStatistics.TriplesThrown
+                }
             };
 
             await _playerRepository.AddAsync(player);
