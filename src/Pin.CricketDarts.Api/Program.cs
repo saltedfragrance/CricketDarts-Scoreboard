@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Pin.CricketDarts.Core.Interfaces;
 using Pin.CricketDarts.Infrastructure.Data;
+using Pin.CricketDarts.Infrastructure.Repositories;
 
 namespace Pin.CricketDarts.Api
 {
@@ -15,6 +17,9 @@ namespace Pin.CricketDarts.Api
             builder.Services.AddControllers();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
+
+            builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {

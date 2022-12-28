@@ -10,6 +10,5 @@ namespace Pin.CricketDarts.Core.Interfaces
 {
     public interface IPlayerRepository : IRepository<Player>
     {
-        Task<IEnumerable<Player>> GetPlayers();
     }
 }
