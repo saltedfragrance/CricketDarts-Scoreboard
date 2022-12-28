@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pin.CricketDarts.Core.Entities;
+using Pin.CricketDarts.Infrastructure.Data.Seeding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace Pin.CricketDarts.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            Seeder.Seed(modelBuilder);
         }
     }
 }
