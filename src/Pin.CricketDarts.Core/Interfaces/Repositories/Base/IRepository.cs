@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pin.CricketDarts.Core.Interfaces.Base
+namespace Pin.CricketDarts.Core.Interfaces.Repositories.Base
 {
     public interface IRepository<T> where T : BaseEntity
     {

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Pin.CricketDarts.Core.Interfaces;
+using Pin.CricketDarts.Core.Interfaces.Repositories;
 using Pin.CricketDarts.Infrastructure.Data;
 using Pin.CricketDarts.Infrastructure.Repositories;
 
