@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Pin.CricketDarts.Infrastructure\Pin.CricketDarts.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

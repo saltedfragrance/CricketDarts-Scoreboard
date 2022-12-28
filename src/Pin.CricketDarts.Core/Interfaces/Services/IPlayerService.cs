@@ -11,7 +11,7 @@ namespace Pin.CricketDarts.Core.Interfaces.Services
     {
         Task<IEnumerable<PlayerResponseDto>> ListAllAsync();
         Task<PlayerResponseDto> GetByIdAsync(Guid id);
-        Task<PlayerResponseDto> AddAsync(PlayerRequestDto albumRequest);
+        Task AddAsync(PlayerRequestDto albumRequest);
 
     }
 }
