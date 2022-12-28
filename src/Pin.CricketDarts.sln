@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pin.CricketDarts.Infrastruc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pin.CricketDarts.Api", "Pin.CricketDarts.Api\Pin.CricketDarts.Api.csproj", "{29BDA42A-4BDE-4C34-9979-039D860F8F5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pin.CricketDarts.Server", "Pin.CricketDarts.Server\Pin.CricketDarts.Server.csproj", "{A5ED039C-AB2F-4C2F-802E-C6C53DCEED1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pin.CricketDarts.Server", "Pin.CricketDarts.Server\Pin.CricketDarts.Server.csproj", "{A5ED039C-AB2F-4C2F-802E-C6C53DCEED1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pin.CricketDarts.Shared", "Pin.CricketDarts.Shared\Pin.CricketDarts.Shared.csproj", "{B23269EB-8471-484E-B569-BD8A83BB9D89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A5ED039C-AB2F-4C2F-802E-C6C53DCEED1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5ED039C-AB2F-4C2F-802E-C6C53DCEED1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5ED039C-AB2F-4C2F-802E-C6C53DCEED1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B23269EB-8471-484E-B569-BD8A83BB9D89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B23269EB-8471-484E-B569-BD8A83BB9D89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B23269EB-8471-484E-B569-BD8A83BB9D89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B23269EB-8471-484E-B569-BD8A83BB9D89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

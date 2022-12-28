@@ -10,5 +10,7 @@ namespace Pin.CricketDarts.Core.Interfaces.Repositories.Base
     public interface IRepository<T> where T : BaseEntity
     {
         Task<T> GetByIdAsync(Guid id);
+        IQueryable<T> GetAllAsync();
+        Task<T> AddAsync(T entity);
     }
 }

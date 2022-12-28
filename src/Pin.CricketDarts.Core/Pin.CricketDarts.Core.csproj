@@ -15,4 +15,8 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pin.CricketDarts.Shared\Pin.CricketDarts.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
