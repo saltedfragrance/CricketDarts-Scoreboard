@@ -12,5 +12,6 @@ namespace Pin.CricketDarts.Core.Entities
         public string Name { get; set; }
         public Guid PersonalStatisticsId { get; set; }
         public PersonalStatistics PersonalStatistics { get; set; }
+        public ICollection<PlayerGames> PlayerGames { get; set; }
     }
 }
