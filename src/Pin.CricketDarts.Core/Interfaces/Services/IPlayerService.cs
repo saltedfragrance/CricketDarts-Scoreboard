@@ -9,9 +9,9 @@ namespace Pin.CricketDarts.Core.Interfaces.Services
 {
     public interface IPlayerService
     {
-        Task<IEnumerable<PlayerResponseDto>> ListAllAsync();
+        Task<IEnumerable<PlayerResponseDto>> GetAllAsync();
         Task<PlayerResponseDto> GetByIdAsync(Guid id);
-        Task AddAsync(PlayerRequestDto albumRequest);
-
+        Task AddAsync(PlayerRequestDto playerRequestDto);
+        Task<PlayerResponseDto> UpdateAsync(PlayerRequestDto playerRequestDto);
     }
 }

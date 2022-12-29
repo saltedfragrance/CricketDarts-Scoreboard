@@ -1,0 +1,31 @@
+﻿<div class="text-light d-inline-block">
+    <EditForm Model="@NewPlayer" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <div class="card-body">
+            <div class="form-group mb-3">
+                <div class="row">
+                    <div class="col-1 my-auto m-4">
+                        <label>Name: </label>
+                    </div>
+                    <div class="col">
+                        <ValidationMessage For="@(() => NewPlayer.Name)" />
+                        <InputText class="form-control"
+                                   @bind-Value="NewPlayer.Name">
+                        </InputText>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Register for tournament</button>
+        </div>
+    </EditForm>
+</div>
+@code {
+    [Parameter]
+    public Player NewPlayer { get; set; } = new();
+    public EventCallback<Player> OnSave { get; set; }
+
+    private void HandleValidSubmit()
+    {
+        OnSave.InvokeAsync(NewPlayer);
+    }
+}

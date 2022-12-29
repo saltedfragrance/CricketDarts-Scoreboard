@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Pin.CricketDarts.Server.Services.Api;
+using Pin.CricketDarts.Server.Services.Interfaces;
 
 namespace Pin.CricketDarts.Server
 {
@@ -12,6 +14,8 @@ namespace Pin.CricketDarts.Server
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
+            builder.Services.AddTransient<IPlayerService, PlayerService>();
+            builder.Services.AddScoped<HttpClient>();
 
             var app = builder.Build();
 

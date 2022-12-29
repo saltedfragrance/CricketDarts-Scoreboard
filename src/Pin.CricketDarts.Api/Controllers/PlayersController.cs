@@ -26,7 +26,7 @@ namespace Pin.CricketDarts.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPlayers()
         {
-            var players = await _playerService.ListAllAsync();
+            var players = await _playerService.GetAllAsync();
 
             return Ok(players);
         }

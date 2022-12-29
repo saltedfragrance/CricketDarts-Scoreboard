@@ -1,4 +1,5 @@
-﻿using Pin.CricketDarts.Core.Entities.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using Pin.CricketDarts.Core.Entities.Base;
 using Pin.CricketDarts.Core.Interfaces.Repositories.Base;
 using Pin.CricketDarts.Infrastructure.Data;
 using System;
@@ -24,30 +25,21 @@ namespace Pin.CricketDarts.Infrastructure.Repositories.Base
             await _dbContext.SaveChangesAsync();
             return entity;
         }
-
-        public Task<T> DeleteAsync(T entity)
+        public async Task<T> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Set<T>().FindAsync(id);
         }
 
-        public Task<T> DeleteAsync(Guid id)
+        public async Task<T> UpdateAsync(T entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(entity).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+            return entity;
         }
 
-        public IQueryable<T> GetAllAsync()
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<T> GetByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<T> UpdateAsync(T entity)
-        {
-            throw new NotImplementedException();
+            return await _dbContext.Set<T>().ToListAsync();
         }
     }
 }

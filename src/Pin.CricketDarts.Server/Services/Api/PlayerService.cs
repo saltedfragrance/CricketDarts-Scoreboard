@@ -32,5 +32,16 @@ namespace Pin.CricketDarts.Server.Services.Api
 
             return _httpClient.PostAsJsonAsync<PlayerRequestDto>(baseUrl, dto);
         }
+
+        public async Task<List<Player>> GetPlayers()
+        {
+            var players = await _httpClient.GetFromJsonAsync<Player[]>($"{baseUrl}");
+
+            return players.Select(p => new Player
+            {
+                Name = p.Name,
+                Id = p.Id
+            }).ToList();
+        }
     }
 }

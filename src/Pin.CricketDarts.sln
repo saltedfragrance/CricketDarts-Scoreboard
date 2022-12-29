@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pin.CricketDarts.Api", "Pin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pin.CricketDarts.Server", "Pin.CricketDarts.Server\Pin.CricketDarts.Server.csproj", "{A5ED039C-AB2F-4C2F-802E-C6C53DCEED1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pin.CricketDarts.Shared", "Pin.CricketDarts.Shared\Pin.CricketDarts.Shared.csproj", "{B23269EB-8471-484E-B569-BD8A83BB9D89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pin.CricketDarts.Shared", "Pin.CricketDarts.Shared\Pin.CricketDarts.Shared.csproj", "{B23269EB-8471-484E-B569-BD8A83BB9D89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

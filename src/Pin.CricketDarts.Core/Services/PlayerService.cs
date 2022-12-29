@@ -38,12 +38,32 @@ namespace Pin.CricketDarts.Core.Services
             await _playerRepository.AddAsync(player);
         }
 
-        public async Task<PlayerResponseDto> GetByIdAsync(Guid id)
+        public async Task<IEnumerable<PlayerResponseDto>> GetAllAsync()
+        {
+            var result = await _playerRepository.GetAllAsync();
+            var dtos = result.Select(r => new PlayerResponseDto
+            {
+                Id = r.Id,
+                Name = r.Name,
+                PersonalStatistics = new PersonalStatisticsResponseDto
+                {
+                    Id = r.PersonalStatistics.Id,
+                    DoublesThrown = r.PersonalStatistics.DoublesThrown,
+                    GamesLost = r.PersonalStatistics.GamesLost,
+                    GamesWon = r.PersonalStatistics.GamesWon,
+                    TriplesThrown = r.PersonalStatistics.TriplesThrown
+                }
+            }).ToList();
+
+            return dtos;
+        }
+
+        public Task<PlayerResponseDto> GetByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<PlayerResponseDto>> ListAllAsync()
+        public Task<PlayerResponseDto> UpdateAsync(PlayerRequestDto playerRequestDto)
         {
             throw new NotImplementedException();
         }
