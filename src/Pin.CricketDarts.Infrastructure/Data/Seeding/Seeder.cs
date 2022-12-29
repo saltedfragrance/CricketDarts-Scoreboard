@@ -15,6 +15,11 @@ namespace Pin.CricketDarts.Infrastructure.Data.Seeding
         {
             Random rnd = new Random();
 
+            List<Tournament> tournaments = new List<Tournament>
+            {
+                new Tournament{ Id = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") }
+            };
+
             List<Player> players = new List<Player>
             {
                 new Player { Id = Guid.NewGuid(), Name = "VincentVega", PersonalStatisticsId =  new Guid("59062baa-5af2-483d-a683-8f982252a3d9") },
@@ -38,12 +43,12 @@ namespace Pin.CricketDarts.Infrastructure.Data.Seeding
 
             List<Game> games = new List<Game>
             {
-                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[0].Id },
-                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[1].Id },
-                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[2].Id },
-                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[3].Id },
-                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[4].Id },
-                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[5].Id }
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[0].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") },
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[1].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") },
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[2].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") },
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[3].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") },
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[4].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") },
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[5].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") }
             };
 
             List<PlayerGames> playerGames = new List<PlayerGames>
