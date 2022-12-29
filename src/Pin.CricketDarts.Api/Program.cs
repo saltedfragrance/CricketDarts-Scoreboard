@@ -21,7 +21,7 @@ namespace Pin.CricketDarts.Api
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
             builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
-            builder.Services.AddScoped<IGameRepository, IGameRepository>();
+            builder.Services.AddScoped<IGameRepository, GameRepository>();
 
             builder.Services.AddScoped<IPlayerService, PlayerService>();
             builder.Services.AddScoped<IGameService, GameService>();

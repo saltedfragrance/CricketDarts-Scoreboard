@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Pin.CricketDarts.Infrastructure.Repositories
 {
-    internal class GameRepository : EfRepository<Game>, IGameRepository
+    public class GameRepository : EfRepository<Game>, IGameRepository
     {
         public GameRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
