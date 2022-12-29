@@ -9,7 +9,6 @@ namespace Pin.CricketDarts.Shared
 {
     public class GameResponseDto
     {
-        public Guid TournamentId { get; set; }
         public bool IsActive { get; set; } = false;
         public IEnumerable<PlayerResponseDto> Players { get; set; }
         public Guid WinnerId { get; set; }
