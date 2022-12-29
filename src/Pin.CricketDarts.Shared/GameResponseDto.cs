@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pin.CricketDarts.Shared.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace Pin.CricketDarts.Shared
 {
-    public class GameResponseDto
+    public class GameResponseDto : BaseDto
     {
         public bool IsActive { get; set; } = false;
         public IEnumerable<PlayerResponseDto> Players { get; set; }

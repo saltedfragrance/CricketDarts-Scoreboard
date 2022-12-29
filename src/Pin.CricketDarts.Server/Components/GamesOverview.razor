@@ -1,4 +1,6 @@
-﻿<div class="text-light d-inline-block">
+﻿@inject NavigationManager navigationManager;
+
+<div class="text-light d-inline-block">
     @if (CurrentGames == null)
     {
         <p>No games yet!</p>
@@ -7,7 +9,7 @@
     {
         @foreach (var game in CurrentGames)
         {
-            <p class="text-black">@game.Players.ElementAt(0).Name vs @game.Players.ElementAt(1).Name</p>
+            <button @onclick="@(()=>navigationManager.NavigateTo($"/SelectedGame/{game.Id}"))" class="btn btn-success">@game.Players.ElementAt(0).Name vs @game.Players.ElementAt(1).Name</button>
         }
     }
 </div>

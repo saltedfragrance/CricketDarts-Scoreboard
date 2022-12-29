@@ -1,0 +1,22 @@
+﻿@page "/SelectedGame/{SelectedGameId:guid}"
+@inject IGameService gameService;
+
+<PageTitle>Scoreboard</PageTitle>
+<ScoreBoard ActiveGame="ActiveGame"></ScoreBoard>
+
+@code{
+    [Parameter]
+    public Guid SelectedGameId { get; set; }
+    [Parameter]
+    public Game ActiveGame { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCurrentGame();
+    }
+
+    private async Task GetCurrentGame()
+    {
+        ActiveGame = (await gameService.GetGames()).Where(g => g.Id == SelectedGameId).FirstOrDefault();
+    }
+}

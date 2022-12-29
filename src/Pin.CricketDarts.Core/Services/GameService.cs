@@ -38,6 +38,7 @@ namespace Pin.CricketDarts.Core.Services
 
             return games.Select(g => new GameResponseDto
             {
+                Id = g.Id,
                 IsActive = g.IsActive,
                 Players = players.Where(p => g.PlayerGames.Any(pg => pg.PlayerId == p.Id)).Select(p => new PlayerResponseDto
                 {

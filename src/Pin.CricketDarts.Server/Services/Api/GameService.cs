@@ -31,6 +31,7 @@ namespace Pin.CricketDarts.Server.Services.Api
 
             return games.Select(p => new Game
             {
+                Id = p.Id,
                 IsActive = p.IsActive,
                 Players = p.Players.Select(c => new Player
                 {

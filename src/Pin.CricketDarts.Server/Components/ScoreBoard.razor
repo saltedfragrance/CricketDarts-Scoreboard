@@ -1,0 +1,11 @@
+﻿@if (ActiveGame.Players != null)
+{
+    <h1>Scoreboard</h1>
+    <h3>@ActiveGame.Players.ElementAt(0).Name vs @ActiveGame.Players.ElementAt(1).Name</h3>
+}
+
+
+@code {
+    [Parameter]
+    public Game ActiveGame { get; set; }
+}

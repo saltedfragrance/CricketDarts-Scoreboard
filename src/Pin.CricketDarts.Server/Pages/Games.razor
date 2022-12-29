@@ -1,7 +1,7 @@
 ﻿@page "/tournament"
 @inject IGameService gameService;
 
-<PageTitle>Statistics</PageTitle>
+<PageTitle>Games overview</PageTitle>
 <GamesOverview CurrentGames="CurrentGames"></GamesOverview>
 
 @code{
@@ -13,7 +13,7 @@
         await RefreshGames();
     }
 
-    public async Task RefreshGames()
+    private async Task RefreshGames()
     {
         CurrentGames = (await gameService.GetGames()).Where(g => g.IsActive).ToList();
     }
