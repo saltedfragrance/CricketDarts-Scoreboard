@@ -12,6 +12,7 @@ namespace Pin.CricketDarts.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
+        public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<PersonalStatistics> PlayerStatistics { get; set; }
         public DbSet<Game> Games { get; set; }
@@ -25,8 +26,6 @@ namespace Pin.CricketDarts.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
-
             modelBuilder.Entity<PlayerGames>()
                 .HasKey(pg => new { pg.GameId, pg.PlayerId });
 

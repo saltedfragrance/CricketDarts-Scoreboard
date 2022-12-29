@@ -72,6 +72,7 @@ namespace Pin.CricketDarts.Infrastructure.Data.Seeding
                 new Score { Id = Guid.NewGuid(), PlayerId = players[5].Id, TotalScore = 4, GameId = games[2].Id }
             };
 
+            modelBuilder.Entity<Tournament>().HasData(tournaments);
             modelBuilder.Entity<Player>().HasData(players);
             modelBuilder.Entity<PersonalStatistics>().HasData(personalStatistics);
             modelBuilder.Entity<Game>().HasData(games);
