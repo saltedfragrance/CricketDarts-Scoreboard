@@ -1,10 +1,11 @@
 ﻿@page "/tournament"
-@inject IGameService playerService;
+@inject IGameService gameService;
 
 <PageTitle>Statistics</PageTitle>
 
 @code{
-
+    [Parameter]
+    public List<Game> CurrentGames { get; set; }
     protected override async Task OnInitializedAsync()
     {
         await RefreshGames();
@@ -12,6 +13,6 @@
 
     public async Task RefreshGames()
     {
-
+        CurrentGames = (await gameService.GetGames()).Where(g => g.IsActive).ToList();
     }
 }
