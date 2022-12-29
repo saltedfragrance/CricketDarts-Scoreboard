@@ -9,7 +9,8 @@ namespace Pin.CricketDarts.Core.Entities
 {
     public class Game : BaseEntity
     {
-        public bool ActiveGame { get; set; } = false;
+        public Guid TournamentId { get; set; }
+        public bool IsActive { get; set; } = false;
         public ICollection<PlayerGames> PlayerGames { get; set; }
         public Guid WinnerId { get; set; }
         public ICollection<Score> Scores { get; set; }

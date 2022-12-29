@@ -1,8 +1,11 @@
 ﻿@page "/"
 @inject IPlayerService playerService;
 <PageTitle>Player Registration</PageTitle>
-<Registration OnSave ="AddPlayer"></Registration>
+<Registration OnSave="AddPlayer"></Registration>
 
 @code{
-
+    private void AddPlayer(Player player)
+    {
+        playerService.CreatePlayer(player);
+    }
 }

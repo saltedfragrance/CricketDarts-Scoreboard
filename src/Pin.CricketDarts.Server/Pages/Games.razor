@@ -1,0 +1,17 @@
+﻿@page "/tournament"
+@inject IPlayerService playerService;
+
+<PageTitle>Statistics</PageTitle>
+
+@code{
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshGames();
+    }
+
+    public async Task RefreshGames()
+    {
+
+    }
+}

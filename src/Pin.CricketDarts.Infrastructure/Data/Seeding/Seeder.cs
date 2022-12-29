@@ -38,12 +38,12 @@ namespace Pin.CricketDarts.Infrastructure.Data.Seeding
 
             List<Game> games = new List<Game>
             {
-                new Game{ Id = Guid.NewGuid(),  ActiveGame = false, WinnerId = players[0].Id },
-                new Game{ Id = Guid.NewGuid(),  ActiveGame = false, WinnerId = players[1].Id },
-                new Game{ Id = Guid.NewGuid(),  ActiveGame = false, WinnerId = players[2].Id },
-                new Game{ Id = Guid.NewGuid(),  ActiveGame = false, WinnerId = players[3].Id },
-                new Game{ Id = Guid.NewGuid(),  ActiveGame = false, WinnerId = players[4].Id },
-                new Game{ Id = Guid.NewGuid(),  ActiveGame = false, WinnerId = players[5].Id }
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[0].Id },
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[1].Id },
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[2].Id },
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[3].Id },
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[4].Id },
+                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[5].Id }
             };
 
             List<PlayerGames> playerGames = new List<PlayerGames>

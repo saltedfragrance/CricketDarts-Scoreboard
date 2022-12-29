@@ -22,6 +22,7 @@
 @code {
     [Parameter]
     public Player NewPlayer { get; set; } = new();
+    [Parameter]
     public EventCallback<Player> OnSave { get; set; }
 
     private void HandleValidSubmit()
