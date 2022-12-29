@@ -1,4 +1,5 @@
-﻿using Pin.CricketDarts.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Pin.CricketDarts.Core.Entities;
 using Pin.CricketDarts.Core.Interfaces.Repositories;
 using Pin.CricketDarts.Infrastructure.Data;
 using Pin.CricketDarts.Infrastructure.Repositories.Base;
@@ -14,6 +15,11 @@ namespace Pin.CricketDarts.Infrastructure.Repositories
     {
         public GameRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
+        }
+
+        public override async Task<IEnumerable<Game>> GetAllAsync()
+        {
+            return await _dbContext.Set<Game>().Include(x => x.PlayerGames).ToListAsync();
         }
     }
 }
