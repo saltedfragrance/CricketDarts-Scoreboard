@@ -9,6 +9,7 @@ namespace Pin.CricketDarts.Core.Entities
 {
     public class Tournament : BaseEntity
     {
-        public ICollection<Game> OngoingGames { get; set; }
+        public bool IsOngoing { get; set; } = false;
+        public ICollection<Game> Games { get; set; }
     }
 }
