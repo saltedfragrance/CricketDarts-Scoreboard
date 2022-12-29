@@ -14,7 +14,7 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ActiveGame = table.Column<bool>(type: "bit", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     WinnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -108,15 +108,15 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Games",
-                columns: new[] { "Id", "ActiveGame", "WinnerId" },
+                columns: new[] { "Id", "IsActive", "WinnerId" },
                 values: new object[,]
                 {
-                    { new Guid("02a34123-2c0a-44fd-bc0f-0b2811a0bf49"), false, new Guid("d5075f8b-2790-4454-9fb3-214d617f6c01") },
-                    { new Guid("5e066679-39e5-4bf8-a26b-b1f0e49a68df"), false, new Guid("d6bc8afc-f051-4741-934d-a2a00443c201") },
-                    { new Guid("5e6315c8-cce0-464b-b913-f74bfac8304f"), false, new Guid("790c2820-f1d4-4298-994b-44d281481ad8") },
-                    { new Guid("82bfb14d-bcff-46d3-8dab-66498cf4d5bc"), false, new Guid("f08854d9-e0ae-47a6-b7c9-8a14e9af194b") },
-                    { new Guid("ed06932d-ec42-4de5-83d7-395093100219"), false, new Guid("8afe52ab-f3a4-4742-b4f7-67e54b2a2dc8") },
-                    { new Guid("f97cc947-64b3-4989-a0b5-4429e86cfeda"), false, new Guid("8354dbbb-6d2c-4a0f-aad9-64b4fdc27dfe") }
+                    { new Guid("1639ba16-201a-4afe-9ba0-4ad32c09a946"), false, new Guid("c30f9222-1472-494f-b647-80e02f66bd47") },
+                    { new Guid("8fc41c15-dd12-4a56-b756-80ba94340835"), false, new Guid("64dbcd30-a68a-4fda-8a80-a2e6fba9fd07") },
+                    { new Guid("aaddd93b-d992-4465-9cab-cbb6af9f14ee"), false, new Guid("2e4fe9ce-7976-4606-8a36-178201283e5b") },
+                    { new Guid("ab805a0f-d119-4f7d-a6d7-079431e24438"), false, new Guid("053bfaa9-c5fb-4337-8a4c-bbc9eff7a05c") },
+                    { new Guid("ecbabc2f-37d8-40b9-bb40-1e0000405b2f"), false, new Guid("6db32ec3-a002-4379-a602-d4b4bc240d6c") },
+                    { new Guid("f0b8497d-8611-49a7-9cdb-ed71bf0a4ec5"), false, new Guid("c3c69a34-52e4-4578-abeb-9c96b152fc63") }
                 });
 
             migrationBuilder.InsertData(
@@ -137,12 +137,12 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                 columns: new[] { "Id", "Name", "PersonalStatisticsId" },
                 values: new object[,]
                 {
-                    { new Guid("790c2820-f1d4-4298-994b-44d281481ad8"), "JohnTravolta", new Guid("1389d5cd-2fa1-4dfd-a422-c4e30e89686e") },
-                    { new Guid("8354dbbb-6d2c-4a0f-aad9-64b4fdc27dfe"), "Butch", new Guid("fd89d57c-01ea-4938-9061-4961c3ed02dc") },
-                    { new Guid("8afe52ab-f3a4-4742-b4f7-67e54b2a2dc8"), "VincentVega", new Guid("59062baa-5af2-483d-a683-8f982252a3d9") },
-                    { new Guid("d5075f8b-2790-4454-9fb3-214d617f6c01"), "TheWolf", new Guid("f49ac80b-e798-4ae6-8689-2016921e6a64") },
-                    { new Guid("d6bc8afc-f051-4741-934d-a2a00443c201"), "Fabienne", new Guid("0928ac0b-b2f6-4189-9280-2318c8ab91d2") },
-                    { new Guid("f08854d9-e0ae-47a6-b7c9-8a14e9af194b"), "BruceWillis", new Guid("fcf8914b-061f-4e1c-af01-9fbb8f0847e9") }
+                    { new Guid("053bfaa9-c5fb-4337-8a4c-bbc9eff7a05c"), "TheWolf", new Guid("f49ac80b-e798-4ae6-8689-2016921e6a64") },
+                    { new Guid("2e4fe9ce-7976-4606-8a36-178201283e5b"), "Fabienne", new Guid("0928ac0b-b2f6-4189-9280-2318c8ab91d2") },
+                    { new Guid("64dbcd30-a68a-4fda-8a80-a2e6fba9fd07"), "VincentVega", new Guid("59062baa-5af2-483d-a683-8f982252a3d9") },
+                    { new Guid("6db32ec3-a002-4379-a602-d4b4bc240d6c"), "JohnTravolta", new Guid("1389d5cd-2fa1-4dfd-a422-c4e30e89686e") },
+                    { new Guid("c30f9222-1472-494f-b647-80e02f66bd47"), "BruceWillis", new Guid("fcf8914b-061f-4e1c-af01-9fbb8f0847e9") },
+                    { new Guid("c3c69a34-52e4-4578-abeb-9c96b152fc63"), "Butch", new Guid("fd89d57c-01ea-4938-9061-4961c3ed02dc") }
                 });
 
             migrationBuilder.InsertData(
@@ -150,12 +150,12 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                 columns: new[] { "GameId", "PlayerId" },
                 values: new object[,]
                 {
-                    { new Guid("5e066679-39e5-4bf8-a26b-b1f0e49a68df"), new Guid("790c2820-f1d4-4298-994b-44d281481ad8") },
-                    { new Guid("5e066679-39e5-4bf8-a26b-b1f0e49a68df"), new Guid("d5075f8b-2790-4454-9fb3-214d617f6c01") },
-                    { new Guid("82bfb14d-bcff-46d3-8dab-66498cf4d5bc"), new Guid("8354dbbb-6d2c-4a0f-aad9-64b4fdc27dfe") },
-                    { new Guid("82bfb14d-bcff-46d3-8dab-66498cf4d5bc"), new Guid("d6bc8afc-f051-4741-934d-a2a00443c201") },
-                    { new Guid("ed06932d-ec42-4de5-83d7-395093100219"), new Guid("8afe52ab-f3a4-4742-b4f7-67e54b2a2dc8") },
-                    { new Guid("ed06932d-ec42-4de5-83d7-395093100219"), new Guid("f08854d9-e0ae-47a6-b7c9-8a14e9af194b") }
+                    { new Guid("1639ba16-201a-4afe-9ba0-4ad32c09a946"), new Guid("2e4fe9ce-7976-4606-8a36-178201283e5b") },
+                    { new Guid("1639ba16-201a-4afe-9ba0-4ad32c09a946"), new Guid("c3c69a34-52e4-4578-abeb-9c96b152fc63") },
+                    { new Guid("8fc41c15-dd12-4a56-b756-80ba94340835"), new Guid("64dbcd30-a68a-4fda-8a80-a2e6fba9fd07") },
+                    { new Guid("8fc41c15-dd12-4a56-b756-80ba94340835"), new Guid("c30f9222-1472-494f-b647-80e02f66bd47") },
+                    { new Guid("aaddd93b-d992-4465-9cab-cbb6af9f14ee"), new Guid("053bfaa9-c5fb-4337-8a4c-bbc9eff7a05c") },
+                    { new Guid("aaddd93b-d992-4465-9cab-cbb6af9f14ee"), new Guid("6db32ec3-a002-4379-a602-d4b4bc240d6c") }
                 });
 
             migrationBuilder.InsertData(
@@ -163,12 +163,12 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                 columns: new[] { "Id", "GameId", "PlayerId", "TotalScore" },
                 values: new object[,]
                 {
-                    { new Guid("1f0124ee-3923-4a07-806e-7c450fa06803"), new Guid("5e066679-39e5-4bf8-a26b-b1f0e49a68df"), new Guid("d5075f8b-2790-4454-9fb3-214d617f6c01"), 4 },
-                    { new Guid("25441e34-b16e-447c-bbdd-a3c24df2aecf"), new Guid("ed06932d-ec42-4de5-83d7-395093100219"), new Guid("f08854d9-e0ae-47a6-b7c9-8a14e9af194b"), 40 },
-                    { new Guid("72b81fae-1b16-4d18-bd1c-d6d07df277b3"), new Guid("5e066679-39e5-4bf8-a26b-b1f0e49a68df"), new Guid("790c2820-f1d4-4298-994b-44d281481ad8"), 54 },
-                    { new Guid("8d42a98b-24b8-4e36-8886-b419ec12a998"), new Guid("ed06932d-ec42-4de5-83d7-395093100219"), new Guid("8afe52ab-f3a4-4742-b4f7-67e54b2a2dc8"), 20 },
-                    { new Guid("91a663b7-7dee-4709-98c6-bedbd1b22241"), new Guid("82bfb14d-bcff-46d3-8dab-66498cf4d5bc"), new Guid("8354dbbb-6d2c-4a0f-aad9-64b4fdc27dfe"), 33 },
-                    { new Guid("d3195e38-6b3b-4f6b-9667-86ea882a592e"), new Guid("82bfb14d-bcff-46d3-8dab-66498cf4d5bc"), new Guid("d6bc8afc-f051-4741-934d-a2a00443c201"), 2 }
+                    { new Guid("13ee6594-bcfb-4c63-8271-85e28726ae58"), new Guid("1639ba16-201a-4afe-9ba0-4ad32c09a946"), new Guid("2e4fe9ce-7976-4606-8a36-178201283e5b"), 2 },
+                    { new Guid("560fc099-17da-4c13-83bb-bd63b82a2f57"), new Guid("aaddd93b-d992-4465-9cab-cbb6af9f14ee"), new Guid("6db32ec3-a002-4379-a602-d4b4bc240d6c"), 54 },
+                    { new Guid("663a41ae-ae9b-4c70-bdde-94e03d4ed26b"), new Guid("aaddd93b-d992-4465-9cab-cbb6af9f14ee"), new Guid("053bfaa9-c5fb-4337-8a4c-bbc9eff7a05c"), 4 },
+                    { new Guid("7cd4c2d6-c3af-43e9-9a7b-1e4c65ce36d9"), new Guid("1639ba16-201a-4afe-9ba0-4ad32c09a946"), new Guid("c3c69a34-52e4-4578-abeb-9c96b152fc63"), 33 },
+                    { new Guid("a8ae8737-4695-44bf-b76d-2bf6489e995d"), new Guid("8fc41c15-dd12-4a56-b756-80ba94340835"), new Guid("64dbcd30-a68a-4fda-8a80-a2e6fba9fd07"), 20 },
+                    { new Guid("d3368807-1006-4757-9c82-3d4edd3caa11"), new Guid("8fc41c15-dd12-4a56-b756-80ba94340835"), new Guid("c30f9222-1472-494f-b647-80e02f66bd47"), 40 }
                 });
 
             migrationBuilder.CreateIndex(
