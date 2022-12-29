@@ -2,10 +2,12 @@
 @inject IGameService gameService;
 
 <PageTitle>Statistics</PageTitle>
+<GamesOverview CurrentGames="CurrentGames"></GamesOverview>
 
 @code{
     [Parameter]
     public List<Game> CurrentGames { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await RefreshGames();

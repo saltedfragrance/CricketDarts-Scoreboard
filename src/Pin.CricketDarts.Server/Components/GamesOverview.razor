@@ -1,0 +1,18 @@
+﻿<div class="text-light d-inline-block">
+    @if (CurrentGames == null)
+    {
+        <p>No games yet!</p>
+    }
+    else
+    {
+        @foreach (var game in CurrentGames)
+        {
+            <p class="text-black">@game.Players.ElementAt(0).Name vs @game.Players.ElementAt(1).Name</p>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<Game> CurrentGames { get; set; }
+}

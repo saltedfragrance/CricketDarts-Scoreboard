@@ -25,9 +25,19 @@ namespace Pin.CricketDarts.Server.Services.Api
             return _httpClient.PostAsJsonAsync<GameRequestDto>(baseUrl, dto);
         }
 
-        public Task<List<Game>> GetGames()
+        public async Task<List<Game>> GetGames()
         {
-            throw new NotImplementedException();
+            var games = await _httpClient.GetFromJsonAsync<Game[]>($"{baseUrl}");
+
+            return games.Select(p => new Game
+            {
+                IsActive = p.IsActive,
+                Players = p.Players.Select(c => new Player
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }).ToList()
+            }).ToList();
         }
     }
 }
