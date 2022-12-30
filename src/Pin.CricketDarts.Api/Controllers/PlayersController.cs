@@ -51,8 +51,8 @@ namespace Pin.CricketDarts.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var playerResponseDto = await _playerService.UpdateAsync(playerRequestDto);
-            return Ok(playerResponseDto);
+            await _playerService.UpdateAsync(playerRequestDto);
+            return Ok("Player updated!");
         }
     }
 }

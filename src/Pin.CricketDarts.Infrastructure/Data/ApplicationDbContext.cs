@@ -14,10 +14,8 @@ namespace Pin.CricketDarts.Infrastructure.Data
     {
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<Player> Players { get; set; }
-        public DbSet<PersonalStatistics> PlayerStatistics { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<PlayerGames> PlayerGames { get; set; }
-        public DbSet<Score> Score { get; set; }
         public DbSet<ScoreBoardEntry> ScoreBoardEntries { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
