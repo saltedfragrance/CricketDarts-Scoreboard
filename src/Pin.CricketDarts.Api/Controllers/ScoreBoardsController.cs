@@ -29,5 +29,13 @@ namespace Pin.CricketDarts.Api.Controllers
             await _scoreBoardEntryService.AddAsync(scoreBoardEntryRequestDto);
             return Ok("Scoreboard entry added!");
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateScoreBoardEntry(ScoreBoardEntryRequestDto scoreBoardEntryRequestDto)
+        {
+
+            await _scoreBoardEntryService.UpdateAsync(scoreBoardEntryRequestDto);
+            return Ok("Scoreboard entry updated!");
+        }
     }
 }

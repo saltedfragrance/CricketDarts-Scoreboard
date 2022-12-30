@@ -8,7 +8,7 @@ namespace Pin.CricketDarts.Server.Services.Api
 {
     public class ScoreBoardEntryService : IScoreBoardEntryService
     {
-        private string baseUrl = "https://localhost:7117/api/ScoreBoardEntries";
+        private string baseUrl = "https://localhost:7117/api/ScoreBoards";
         private readonly HttpClient _httpClient;
 
         public ScoreBoardEntryService(HttpClient httpClient)
@@ -27,7 +27,7 @@ namespace Pin.CricketDarts.Server.Services.Api
                 Target = scoreBoardEntry.Target,
             };
 
-            _httpClient.PostAsJsonAsync<ScoreBoardEntryRequestDto>(baseUrl, dto);
+            await _httpClient.PostAsJsonAsync<ScoreBoardEntryRequestDto>(baseUrl, dto);
         }
 
         public async Task<List<ScoreBoardEntry>> GetScoreBoardEntries()
@@ -52,7 +52,7 @@ namespace Pin.CricketDarts.Server.Services.Api
                 Target = scoreBoardEntry.Target,
                 Status = scoreBoardEntry.Status,
                 PlayerId = scoreBoardEntry.PlayerId,
-                GameId = scoreBoardEntry.GameId,
+                GameId = scoreBoardEntry.GameId
             };
 
             await _httpClient.PutAsJsonAsync<ScoreBoardEntryRequestDto>($"{baseUrl}", dto);
