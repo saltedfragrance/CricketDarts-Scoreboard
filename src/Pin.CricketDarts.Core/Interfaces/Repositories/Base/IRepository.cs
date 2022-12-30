@@ -12,5 +12,6 @@ namespace Pin.CricketDarts.Core.Interfaces.Repositories.Base
         Task<T> GetByIdAsync(Guid id);
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> AddAsync(T entity);
+        Task<T> UpdateAsync(T entity);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pin.CricketDarts.Core.Entities;
+using Pin.CricketDarts.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,19 +49,21 @@ namespace Pin.CricketDarts.Infrastructure.Data.Seeding
                 new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[2].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") },
                 new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[3].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") },
                 new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[4].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") },
-                new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[5].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") }
+                new Game{ Id = Guid.NewGuid(),  IsActive = true, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") }
             };
 
             List<PlayerGames> playerGames = new List<PlayerGames>
             {
-                new PlayerGames{ GameId = games[0].Id, PlayerId = players[0].Id },
-                new PlayerGames{ GameId = games[0].Id, PlayerId = players[1].Id },
-                new PlayerGames{ GameId = games[1].Id, PlayerId = players[2].Id },
-                new PlayerGames{ GameId = games[1].Id, PlayerId = players[3].Id },
-                new PlayerGames{ GameId = games[2].Id, PlayerId = players[4].Id },
-                new PlayerGames{ GameId = games[2].Id, PlayerId = players[5].Id }
+                new PlayerGames{ GameId = games[5].Id, PlayerId = players[0].Id },
+                new PlayerGames{ GameId = games[5].Id, PlayerId = players[1].Id },
             };
 
+            List<ScoreBoardEntry> scoreBoardEntries = new List<ScoreBoardEntry>
+            {
+                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 16, Status = TargetStatus.Closed },
+                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 15, Status = TargetStatus.OnePoint },
+                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[1].Id, Target = 17, Status = TargetStatus.TwoPoint }
+            };
 
             List<Score> scores = new List<Score>
             {
@@ -78,6 +81,7 @@ namespace Pin.CricketDarts.Infrastructure.Data.Seeding
             modelBuilder.Entity<Game>().HasData(games);
             modelBuilder.Entity<PlayerGames>().HasData(playerGames);
             modelBuilder.Entity<Score>().HasData(scores);
+            modelBuilder.Entity<ScoreBoardEntry>().HasData(scoreBoardEntries);
         }
     }
 }

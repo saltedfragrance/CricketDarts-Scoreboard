@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace Pin.CricketDarts.Shared
 {
-    public class ScoreResponseDto : BaseDto
+    public class ScoreBoardEntryResponseDto : BaseDto
     {
         public Guid GameId { get; set; }
         public Guid PlayerId { get; set; }
-        public PlayerResponseDto Player { get; set; }
-        public int TotalScore { get; set; }
-        public IEnumerable<ScoreBoardEntryResponseDto> ScoreBoardEntries { get; set; }
+        public int Target { get; set; }
+        public int Status { get; set; }
     }
 }

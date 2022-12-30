@@ -15,5 +15,6 @@ namespace Pin.CricketDarts.Core.Entities
         public ICollection<PlayerGames> PlayerGames { get; set; }
         public Guid WinnerId { get; set; }
         public ICollection<Score> Scores { get; set; }
+        public ICollection<ScoreBoardEntry> ScoreBoard { get; set; }
     }
 }

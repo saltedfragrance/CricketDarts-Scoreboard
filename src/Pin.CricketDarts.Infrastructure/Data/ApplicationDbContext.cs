@@ -18,6 +18,7 @@ namespace Pin.CricketDarts.Infrastructure.Data
         public DbSet<Game> Games { get; set; }
         public DbSet<PlayerGames> PlayerGames { get; set; }
         public DbSet<Score> Score { get; set; }
+        public DbSet<ScoreBoardEntry> ScoreBoardEntries { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
              base(options)

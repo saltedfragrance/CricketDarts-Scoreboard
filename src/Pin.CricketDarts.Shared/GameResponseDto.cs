@@ -14,5 +14,6 @@ namespace Pin.CricketDarts.Shared
         public IEnumerable<PlayerResponseDto> Players { get; set; }
         public Guid WinnerId { get; set; }
         public IEnumerable<ScoreResponseDto> Scores { get; set; }
+        public IEnumerable<ScoreBoardEntryResponseDto> ScoreBoardEntries { get; set; }
     }
 }

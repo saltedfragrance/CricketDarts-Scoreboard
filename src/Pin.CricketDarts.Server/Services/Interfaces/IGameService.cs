@@ -6,5 +6,6 @@ namespace Pin.CricketDarts.Server.Services.Interfaces
     {
         Task<List<Game>> GetGames();
         Task CreateGame(Game game);
+        Task UpdateGame(Game game);
     }
 }

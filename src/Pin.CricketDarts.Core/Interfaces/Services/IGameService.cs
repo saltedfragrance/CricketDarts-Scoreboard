@@ -12,6 +12,6 @@ namespace Pin.CricketDarts.Core.Interfaces.Services
         Task<IEnumerable<GameResponseDto>> GetAllAsync();
         Task<GameResponseDto> GetByIdAsync(Guid id);
         Task AddAsync(GameRequestDto gameRequestDto);
-        Task<GameResponseDto> UpdateAsync(GameRequestDto gameRequestDto);
+        Task UpdateAsync(GameRequestDto gameRequestDto);
     }
 }

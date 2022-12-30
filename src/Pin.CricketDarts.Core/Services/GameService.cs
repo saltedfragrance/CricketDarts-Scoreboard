@@ -1,4 +1,5 @@
 ﻿using Pin.CricketDarts.Core.Entities;
+using Pin.CricketDarts.Core.Enums;
 using Pin.CricketDarts.Core.Interfaces.Repositories;
 using Pin.CricketDarts.Core.Interfaces.Services;
 using Pin.CricketDarts.Shared;
@@ -52,6 +53,21 @@ namespace Pin.CricketDarts.Core.Services
                         GamesWon = p.PersonalStatistics.GamesWon,
                         TriplesThrown = p.PersonalStatistics.TriplesThrown,
                     }
+                }),
+                ScoreBoardEntries = g.ScoreBoard.Select(x => new ScoreBoardEntryResponseDto
+                {
+                    Id = x.Id,
+                    GameId = x.GameId,
+                    PlayerId = x.PlayerId,
+                    Status = (int)x.Status,
+                    Target = x.Target
+                }),
+                Scores = g.Scores.Select(x => new ScoreResponseDto
+                {
+                    Id = x.Id,
+                    TotalScore = x.TotalScore,
+                    PlayerId = x.PlayerId,
+                    GameId = x.GameId
                 })
             }).ToList();
         }
@@ -61,9 +77,27 @@ namespace Pin.CricketDarts.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<GameResponseDto> UpdateAsync(GameRequestDto gameRequestDto)
+        public async Task UpdateAsync(GameRequestDto gameRequestDto)
         {
-            throw new NotImplementedException();
+            var game = new Game
+            {
+                Id = gameRequestDto.Id,
+                IsActive = gameRequestDto.IsActive,
+                ScoreBoard = gameRequestDto.ScoreBoardEntries.Select(s => new ScoreBoardEntry
+                {
+                    GameId = gameRequestDto.Id,
+                    PlayerId = s.PlayerId,
+                    Status = (TargetStatus)s.Status,
+                    Target = s.Target,
+                }).ToList(),
+                Scores = gameRequestDto.Scores.Select(s => new Score
+                {
+
+                }).ToList(),
+                WinnerId = gameRequestDto.WinnerId,
+
+            };
+            await _gameRepository.UpdateAsync(game);
         }
     }
 }

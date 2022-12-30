@@ -2,7 +2,9 @@
 @inject IGameService gameService;
 
 <PageTitle>Scoreboard</PageTitle>
-<ScoreBoard ActiveGame="ActiveGame"></ScoreBoard>
+<ScoreBoard ActiveGame="ActiveGame"
+            UpdateScoreBoard="UpdateScoreBoard"
+            CreateScoreBoardEntry="CreateScoreBoardEntry"></ScoreBoard>
 
 @code{
     [Parameter]
@@ -13,10 +15,53 @@
     protected override async Task OnInitializedAsync()
     {
         await GetCurrentGame();
+        await CreateScoreBoardEntries();
     }
 
     private async Task GetCurrentGame()
     {
         ActiveGame = (await gameService.GetGames()).Where(g => g.Id == SelectedGameId).FirstOrDefault();
+    }
+    private async Task UpdateScoreBoard(Guid id)
+    {
+        var status = ActiveGame.ScoreBoardEntries.Where(s => s.Id == id).FirstOrDefault().Status;
+
+        if (status == 0) ActiveGame.ScoreBoardEntries.Where(s => s.Id == id).FirstOrDefault().Status = 1;
+        else if (status == 1) ActiveGame.ScoreBoardEntries.Where(s => s.Id == id).FirstOrDefault().Status = 2;
+        else ActiveGame.ScoreBoardEntries.Where(s => s.Id == id).FirstOrDefault().Status = 3;
+
+        await gameService.UpdateGame(ActiveGame);
+        StateHasChanged();
+    }
+
+    private async Task CreateScoreBoardEntries()
+    {
+
+        foreach (var player in ActiveGame.Players)
+        {
+            @for (int i = 20; i > 13; i--)
+            {
+                var entry = ActiveGame.ScoreBoardEntries.ToList().Find(e => e.Target == i && e.PlayerId == player.Id);
+
+                if (entry == null)
+                {
+                    var newEntry = new ScoreBoardEntry
+                    {
+                        GameId = ActiveGame.Id,
+                        Id = Guid.NewGuid(),
+                        PlayerId = player.Id,
+                        Status = 0,
+                        Target = i
+                    };
+
+                    ActiveGame.ScoreBoardEntries.Add(newEntry);
+                }
+
+            }
+        }
+
+
+
+        await gameService.UpdateGame(ActiveGame);
     }
 }

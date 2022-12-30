@@ -1,29 +1,30 @@
 ﻿@if (ActiveGame.Players != null)
 {
-    string playerOne = "playerOne";
-    string playerTwo = "playerTwo";
+    var playerOne = ActiveGame.Players.ElementAt(0);
+    var playerTwo = ActiveGame.Players.ElementAt(1);
 
     <div class="row text-light d-flex justify-content-center text-black">
         <h1>Scoreboard</h1>
-        <h3>@ActiveGame.Players.ElementAt(0).Name vs @ActiveGame.Players.ElementAt(1).Name</h3>
+        <h3>@playerOne.Name vs @playerTwo.Name</h3>
     </div>
 
     <div class="row row-cols-0  row-cols-lg-4  d-flex justify-content-center">
         <div class="container">
             <div class="row border-bottom ">
-                <div class="col ">@ActiveGame.Players.ElementAt(0).Name</div>
+                <div class="col ">@playerOne.Name</div>
                 <div class="col"></div>
-                <div class="col">@ActiveGame.Players.ElementAt(1).Name</div>
+                <div class="col">@playerTwo.Name</div>
             </div>
             @for (int i = 20; i > 13; i--)
             {
-                int position = i;
+                int target = i;
+                Guid scoreBoardEntryPlayerOneId = ActiveGame.ScoreBoardEntries.Where(s => s.Target == i && s.PlayerId == playerOne.Id).FirstOrDefault().Id;
+                Guid scoreBoardEntryPlayerTwoId = ActiveGame.ScoreBoardEntries.Where(s => s.Target == i && s.PlayerId == playerTwo.Id).FirstOrDefault().Id;
 
                 <div class="row">
                     <div class="col border-bottom">
-                        <button class="btn btn-light" @onclick="() => ChangeSymbol(position, playerOne)">
-                            @if (i != 14)@symbols.Where(s => s.Key == $"playerOne-{i}").FirstOrDefault().Value
-                            else @symbols.Where(s => s.Key == $"playerOne-bull").FirstOrDefault().Value
+                        <button class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(scoreBoardEntryPlayerOneId)">
+                            @GetSymbol(target, playerOne.Id);
                         </button>
                     </div>
                     <div class="col border-start border-end">
@@ -37,9 +38,8 @@
                         }
                     </div>
                     <div class="col border-bottom">
-                        <button class="btn btn-light" @onclick="() => ChangeSymbol(position, playerTwo)">
-                            @if (i != 14)@symbols.Where(s => s.Key == $"playerTwo-{i}").FirstOrDefault().Value
-                            else @symbols.Where(s => s.Key == $"playerTwo-bull").FirstOrDefault().Value
+                        <button class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(scoreBoardEntryPlayerTwoId)">
+                            @GetSymbol(target, playerOne.Id);
                         </button>
                     </div>
                 </div>
@@ -52,34 +52,54 @@
 @code {
     [Parameter]
     public Game ActiveGame { get; set; }
-    private Dictionary<string, string> symbols { get; set; } = new();
+    [Parameter]
+    public EventCallback<Guid> UpdateScoreBoard { get; set; }
 
-    private void ChangeSymbol(int position, string player)
+    private int CalculateStatus(int currentStatus)
     {
-        KeyValuePair<string, string> symbol;
-        if (position != 14) symbol = symbols.Where(s => s.Key == $"{player}-{position}").FirstOrDefault();
-        else symbol = symbols.Where(s => s.Key == $"{player}-bull").FirstOrDefault();
-
-        if (symbol.Value == "") symbols[symbol.Key] = "/";
-        else if (symbol.Value == "/") symbols[symbol.Key] = "x";
-        else if (symbol.Value == "x") symbols[symbol.Key] = "⨂";
+        if (currentStatus == 0) return 1;
+        else if (currentStatus == 1) return 2;
+        else return 3;
     }
 
-    protected override void OnInitialized()
-    {
-        for (int i = 20; i > 13; i--)
-        {
-            if (i != 14)
-            {
-                symbols.Add($"playerOne-{i}", "");
-                symbols.Add($"playerTwo-{i}", "");
-            }
+    //private Dictionary<string, string> symbols { get; set; } = new();
 
-            else
-            {
-                symbols.Add($"playerOne-bull", "");
-                symbols.Add($"playerTwo-bull", "");
-            }
-        }
+    //private void ChangeSymbol(int position, Guid playerId)
+    //{
+    //    KeyValuePair<string, string> symbol;
+    //    if (position != 14) symbol = symbols.Where(s => s.Key == $"{player}-{position}").FirstOrDefault();
+    //    else symbol = symbols.Where(s => s.Key == $"{player}-bull").FirstOrDefault();
+
+    //    if (symbol.Value == "") symbols[symbol.Key] = "/";
+    //    else if (symbol.Value == "/") symbols[symbol.Key] = "x";
+    //    else if (symbol.Value == "x") symbols[symbol.Key] = "⨂";
+    //}
+
+    private string GetSymbol(int target, Guid playerId)
+    {
+        var targetStatus = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target).FirstOrDefault().Status;
+
+        if (targetStatus == 0) return "open";
+        else if (targetStatus == 1) return "single";
+        else if (targetStatus == 2) return "double";
+        else return "triple";
     }
+
+    //protected override void OnInitialized()
+    //{
+    //    for (int i = 20; i > 13; i--)
+    //    {
+    //        if (i != 14)
+    //        {
+    //            symbols.Add($"playerOne-{i}", "");
+    //            symbols.Add($"playerTwo-{i}", "");
+    //        }
+
+    //        else
+    //        {
+    //            symbols.Add($"playerOne-bull", "");
+    //            symbols.Add($"playerTwo-bull", "");
+    //        }
+    //    }
+}
 }

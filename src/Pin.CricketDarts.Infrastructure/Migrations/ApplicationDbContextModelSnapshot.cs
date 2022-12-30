@@ -46,45 +46,45 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0ebadcc7-c3ed-47c4-ba96-80e67f1fdbce"),
+                            Id = new Guid("2c294f35-fc57-46aa-82f0-4bf5c9b5d662"),
                             IsActive = false,
                             TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9"),
-                            WinnerId = new Guid("8acc734d-23b0-4efe-a949-deb6c2aa358f")
+                            WinnerId = new Guid("26ab4304-83dc-4471-b308-664d422da18d")
                         },
                         new
                         {
-                            Id = new Guid("2932ce9f-182b-4ec3-b038-9aea45322120"),
+                            Id = new Guid("93826af0-2c6f-4fd3-8657-0ce74b0df9fb"),
                             IsActive = false,
                             TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9"),
-                            WinnerId = new Guid("03a7db65-93ab-4c50-a9b7-6ebc3e79c4fd")
+                            WinnerId = new Guid("b8ce94dc-6119-465e-b77b-7d3493c747b6")
                         },
                         new
                         {
-                            Id = new Guid("3e119591-ccab-4dd4-bc44-bd638aa48081"),
+                            Id = new Guid("a49cd714-9957-4cab-8896-c76b7c6b7494"),
                             IsActive = false,
                             TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9"),
-                            WinnerId = new Guid("f1a926e7-5e09-4541-b5a8-99c32e9d9f4f")
+                            WinnerId = new Guid("464c80df-e323-487f-a9f4-dfb3ec67ee07")
                         },
                         new
                         {
-                            Id = new Guid("e1ba239c-e7df-42df-b1d1-8b3c8dc75cd8"),
+                            Id = new Guid("c14c5b24-c3bf-46f4-b283-e5f2c3d416f5"),
                             IsActive = false,
                             TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9"),
-                            WinnerId = new Guid("9c5cffc9-bd19-45e4-82f3-83094989bed6")
+                            WinnerId = new Guid("5656ed8b-28b9-438b-b54b-c8584eaec931")
                         },
                         new
                         {
-                            Id = new Guid("63d5a480-e753-497b-8392-3230e811134f"),
+                            Id = new Guid("4bdc27b3-3856-4e12-b8d8-797a21a21ab7"),
                             IsActive = false,
                             TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9"),
-                            WinnerId = new Guid("7691dbc9-4f83-45f9-b453-aef0a431b179")
+                            WinnerId = new Guid("24971afc-2c0a-4ef5-b9a4-e16f07959c88")
                         },
                         new
                         {
-                            Id = new Guid("33f3f798-02e8-4c8e-b82e-2cdc90095f23"),
-                            IsActive = false,
+                            Id = new Guid("69057bc0-0052-46c6-ab39-ace97b50293a"),
+                            IsActive = true,
                             TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9"),
-                            WinnerId = new Guid("2c5361aa-537f-4914-8f7a-1bca3dfedc88")
+                            WinnerId = new Guid("00000000-0000-0000-0000-000000000000")
                         });
                 });
 
@@ -183,37 +183,37 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8acc734d-23b0-4efe-a949-deb6c2aa358f"),
+                            Id = new Guid("26ab4304-83dc-4471-b308-664d422da18d"),
                             Name = "VincentVega",
                             PersonalStatisticsId = new Guid("59062baa-5af2-483d-a683-8f982252a3d9")
                         },
                         new
                         {
-                            Id = new Guid("03a7db65-93ab-4c50-a9b7-6ebc3e79c4fd"),
+                            Id = new Guid("b8ce94dc-6119-465e-b77b-7d3493c747b6"),
                             Name = "BruceWillis",
                             PersonalStatisticsId = new Guid("fcf8914b-061f-4e1c-af01-9fbb8f0847e9")
                         },
                         new
                         {
-                            Id = new Guid("f1a926e7-5e09-4541-b5a8-99c32e9d9f4f"),
+                            Id = new Guid("464c80df-e323-487f-a9f4-dfb3ec67ee07"),
                             Name = "Fabienne",
                             PersonalStatisticsId = new Guid("0928ac0b-b2f6-4189-9280-2318c8ab91d2")
                         },
                         new
                         {
-                            Id = new Guid("9c5cffc9-bd19-45e4-82f3-83094989bed6"),
+                            Id = new Guid("5656ed8b-28b9-438b-b54b-c8584eaec931"),
                             Name = "Butch",
                             PersonalStatisticsId = new Guid("fd89d57c-01ea-4938-9061-4961c3ed02dc")
                         },
                         new
                         {
-                            Id = new Guid("7691dbc9-4f83-45f9-b453-aef0a431b179"),
+                            Id = new Guid("24971afc-2c0a-4ef5-b9a4-e16f07959c88"),
                             Name = "JohnTravolta",
                             PersonalStatisticsId = new Guid("1389d5cd-2fa1-4dfd-a422-c4e30e89686e")
                         },
                         new
                         {
-                            Id = new Guid("2c5361aa-537f-4914-8f7a-1bca3dfedc88"),
+                            Id = new Guid("eba9b205-2e38-40b3-8b65-65ac588b28a8"),
                             Name = "TheWolf",
                             PersonalStatisticsId = new Guid("f49ac80b-e798-4ae6-8689-2016921e6a64")
                         });
@@ -236,33 +236,13 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            GameId = new Guid("0ebadcc7-c3ed-47c4-ba96-80e67f1fdbce"),
-                            PlayerId = new Guid("8acc734d-23b0-4efe-a949-deb6c2aa358f")
+                            GameId = new Guid("69057bc0-0052-46c6-ab39-ace97b50293a"),
+                            PlayerId = new Guid("26ab4304-83dc-4471-b308-664d422da18d")
                         },
                         new
                         {
-                            GameId = new Guid("0ebadcc7-c3ed-47c4-ba96-80e67f1fdbce"),
-                            PlayerId = new Guid("03a7db65-93ab-4c50-a9b7-6ebc3e79c4fd")
-                        },
-                        new
-                        {
-                            GameId = new Guid("2932ce9f-182b-4ec3-b038-9aea45322120"),
-                            PlayerId = new Guid("f1a926e7-5e09-4541-b5a8-99c32e9d9f4f")
-                        },
-                        new
-                        {
-                            GameId = new Guid("2932ce9f-182b-4ec3-b038-9aea45322120"),
-                            PlayerId = new Guid("9c5cffc9-bd19-45e4-82f3-83094989bed6")
-                        },
-                        new
-                        {
-                            GameId = new Guid("3e119591-ccab-4dd4-bc44-bd638aa48081"),
-                            PlayerId = new Guid("7691dbc9-4f83-45f9-b453-aef0a431b179")
-                        },
-                        new
-                        {
-                            GameId = new Guid("3e119591-ccab-4dd4-bc44-bd638aa48081"),
-                            PlayerId = new Guid("2c5361aa-537f-4914-8f7a-1bca3dfedc88")
+                            GameId = new Guid("69057bc0-0052-46c6-ab39-ace97b50293a"),
+                            PlayerId = new Guid("b8ce94dc-6119-465e-b77b-7d3493c747b6")
                         });
                 });
 
@@ -292,45 +272,98 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bdb8db85-e3e8-478b-bae9-84aaca48a8b6"),
-                            GameId = new Guid("0ebadcc7-c3ed-47c4-ba96-80e67f1fdbce"),
-                            PlayerId = new Guid("8acc734d-23b0-4efe-a949-deb6c2aa358f"),
+                            Id = new Guid("d3e1cbd2-df80-4ffd-8c72-f0296ea2a767"),
+                            GameId = new Guid("2c294f35-fc57-46aa-82f0-4bf5c9b5d662"),
+                            PlayerId = new Guid("26ab4304-83dc-4471-b308-664d422da18d"),
                             TotalScore = 20
                         },
                         new
                         {
-                            Id = new Guid("63d98bae-f359-4834-b403-29aefe9a0de4"),
-                            GameId = new Guid("0ebadcc7-c3ed-47c4-ba96-80e67f1fdbce"),
-                            PlayerId = new Guid("03a7db65-93ab-4c50-a9b7-6ebc3e79c4fd"),
+                            Id = new Guid("4d5e2610-6eda-4bec-b7ad-b1b0876ec97b"),
+                            GameId = new Guid("2c294f35-fc57-46aa-82f0-4bf5c9b5d662"),
+                            PlayerId = new Guid("b8ce94dc-6119-465e-b77b-7d3493c747b6"),
                             TotalScore = 40
                         },
                         new
                         {
-                            Id = new Guid("898540a6-dae2-4e94-86b6-3babf6374aec"),
-                            GameId = new Guid("2932ce9f-182b-4ec3-b038-9aea45322120"),
-                            PlayerId = new Guid("f1a926e7-5e09-4541-b5a8-99c32e9d9f4f"),
+                            Id = new Guid("e9aa1b2d-6978-4e92-bfca-25c54718164f"),
+                            GameId = new Guid("93826af0-2c6f-4fd3-8657-0ce74b0df9fb"),
+                            PlayerId = new Guid("464c80df-e323-487f-a9f4-dfb3ec67ee07"),
                             TotalScore = 2
                         },
                         new
                         {
-                            Id = new Guid("91b5c15f-d156-427f-a942-66f5ad4cf18e"),
-                            GameId = new Guid("2932ce9f-182b-4ec3-b038-9aea45322120"),
-                            PlayerId = new Guid("9c5cffc9-bd19-45e4-82f3-83094989bed6"),
+                            Id = new Guid("e36157e5-5cd3-4e48-87c8-963466bd90ca"),
+                            GameId = new Guid("93826af0-2c6f-4fd3-8657-0ce74b0df9fb"),
+                            PlayerId = new Guid("5656ed8b-28b9-438b-b54b-c8584eaec931"),
                             TotalScore = 33
                         },
                         new
                         {
-                            Id = new Guid("846c807a-a5fe-453e-9946-d0a0591cbd03"),
-                            GameId = new Guid("3e119591-ccab-4dd4-bc44-bd638aa48081"),
-                            PlayerId = new Guid("7691dbc9-4f83-45f9-b453-aef0a431b179"),
+                            Id = new Guid("b37e27b5-9035-42c8-970c-989e89a37927"),
+                            GameId = new Guid("a49cd714-9957-4cab-8896-c76b7c6b7494"),
+                            PlayerId = new Guid("24971afc-2c0a-4ef5-b9a4-e16f07959c88"),
                             TotalScore = 54
                         },
                         new
                         {
-                            Id = new Guid("899270e3-7e60-44a7-a490-96d1c1ba9356"),
-                            GameId = new Guid("3e119591-ccab-4dd4-bc44-bd638aa48081"),
-                            PlayerId = new Guid("2c5361aa-537f-4914-8f7a-1bca3dfedc88"),
+                            Id = new Guid("1a841895-35ee-41c3-9896-6a6648e0db42"),
+                            GameId = new Guid("a49cd714-9957-4cab-8896-c76b7c6b7494"),
+                            PlayerId = new Guid("eba9b205-2e38-40b3-8b65-65ac588b28a8"),
                             TotalScore = 4
+                        });
+                });
+
+            modelBuilder.Entity("Pin.CricketDarts.Core.Entities.ScoreBoardEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PlayerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Target")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("ScoreBoardEntries");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("96b63186-e13d-40ee-8cbc-b68c757d64d1"),
+                            GameId = new Guid("69057bc0-0052-46c6-ab39-ace97b50293a"),
+                            PlayerId = new Guid("26ab4304-83dc-4471-b308-664d422da18d"),
+                            Status = 3,
+                            Target = 16
+                        },
+                        new
+                        {
+                            Id = new Guid("915823a9-fbad-4df5-b0db-e4511ba155f9"),
+                            GameId = new Guid("69057bc0-0052-46c6-ab39-ace97b50293a"),
+                            PlayerId = new Guid("26ab4304-83dc-4471-b308-664d422da18d"),
+                            Status = 1,
+                            Target = 15
+                        },
+                        new
+                        {
+                            Id = new Guid("5af26494-c3eb-420c-bcf9-4f7d4a612adb"),
+                            GameId = new Guid("69057bc0-0052-46c6-ab39-ace97b50293a"),
+                            PlayerId = new Guid("b8ce94dc-6119-465e-b77b-7d3493c747b6"),
+                            Status = 2,
+                            Target = 17
                         });
                 });
 
@@ -340,6 +373,9 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsOngoing")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("Tournaments");
@@ -347,14 +383,15 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("243407c9-d7e6-4192-a465-71076a592bf9")
+                            Id = new Guid("243407c9-d7e6-4192-a465-71076a592bf9"),
+                            IsOngoing = false
                         });
                 });
 
             modelBuilder.Entity("Pin.CricketDarts.Core.Entities.Game", b =>
                 {
                     b.HasOne("Pin.CricketDarts.Core.Entities.Tournament", "Tournament")
-                        .WithMany("OngoingGames")
+                        .WithMany("Games")
                         .HasForeignKey("TournamentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -409,9 +446,30 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                     b.Navigation("Player");
                 });
 
+            modelBuilder.Entity("Pin.CricketDarts.Core.Entities.ScoreBoardEntry", b =>
+                {
+                    b.HasOne("Pin.CricketDarts.Core.Entities.Game", "Game")
+                        .WithMany("ScoreBoard")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Pin.CricketDarts.Core.Entities.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Player");
+                });
+
             modelBuilder.Entity("Pin.CricketDarts.Core.Entities.Game", b =>
                 {
                     b.Navigation("PlayerGames");
+
+                    b.Navigation("ScoreBoard");
 
                     b.Navigation("Scores");
                 });
@@ -423,7 +481,7 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
 
             modelBuilder.Entity("Pin.CricketDarts.Core.Entities.Tournament", b =>
                 {
-                    b.Navigation("OngoingGames");
+                    b.Navigation("Games");
                 });
 #pragma warning restore 612, 618
         }
