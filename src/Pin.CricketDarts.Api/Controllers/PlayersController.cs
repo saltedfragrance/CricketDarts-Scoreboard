@@ -42,5 +42,17 @@ namespace Pin.CricketDarts.Api.Controllers
             await _playerService.AddAsync(playerRequestDto);
             return Ok("Player added!");
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdatePlayer(PlayerRequestDto playerRequestDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var playerResponseDto = await _playerService.UpdateAsync(playerRequestDto);
+            return Ok(playerResponseDto);
+        }
     }
 }
