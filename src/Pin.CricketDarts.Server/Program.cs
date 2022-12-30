@@ -16,6 +16,7 @@ namespace Pin.CricketDarts.Server
             builder.Services.AddServerSideBlazor();
             builder.Services.AddTransient<IPlayerService, PlayerService>();
             builder.Services.AddTransient<IGameService, GameService>();
+            builder.Services.AddTransient<IScoreBoardEntryService, ScoreBoardEntryService>();
             builder.Services.AddScoped<HttpClient>();
 
             var app = builder.Build();
