@@ -24,13 +24,11 @@ namespace Pin.CricketDarts.Core.Services
             var player = new Player
             {
                 Id = playerRequestDto.Id,
-                Name = playerRequestDto.Name,
-                HasTurn = playerRequestDto.HasTurn
+                Name = playerRequestDto.Name
             };
 
             await _playerRepository.AddAsync(player);
         }
-
         public async Task<IEnumerable<PlayerResponseDto>> GetAllAsync()
         {
             var result = await _playerRepository.GetAllAsync();
@@ -38,7 +36,7 @@ namespace Pin.CricketDarts.Core.Services
             {
                 Id = r.Id,
                 Name = r.Name,
-                HasTurn= r.HasTurn
+                HasTurn= r.HasTurn,
             }).ToList();
 
             return dtos;

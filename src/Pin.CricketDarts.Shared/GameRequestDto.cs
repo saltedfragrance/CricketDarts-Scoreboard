@@ -12,7 +12,6 @@ namespace Pin.CricketDarts.Shared
         public bool IsActive { get; set; } = false;
         public IEnumerable<PlayerRequestDto> Players { get; set; }
         public Guid WinnerId { get; set; }
-        public IEnumerable<ScoreRequestDto> Scores { get; set; }
         public IEnumerable<ScoreBoardEntryRequestDto> ScoreBoardEntries { get; set; }
     }
 }
