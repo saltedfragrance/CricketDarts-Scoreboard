@@ -13,5 +13,6 @@ namespace Pin.CricketDarts.Core.Entities
         public Guid PersonalStatisticsId { get; set; }
         public PersonalStatistics PersonalStatistics { get; set; }
         public ICollection<PlayerGames> PlayerGames { get; set; }
+        public bool HasTurn { get; set; }
     }
 }

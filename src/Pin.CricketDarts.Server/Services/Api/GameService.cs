@@ -36,7 +36,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                 Players = p.Players.Select(c => new Player
                 {
                     Id = c.Id,
-                    Name = c.Name
+                    Name = c.Name,
+                    HasTurn= c.HasTurn,
                 }).ToList(),
                 Scores = p.Scores.Select(s => new Score
                 {

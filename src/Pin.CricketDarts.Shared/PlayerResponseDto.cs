@@ -6,5 +6,6 @@ namespace Pin.CricketDarts.Shared
     {
         public string Name { get; set; }
         public PersonalStatisticsResponseDto PersonalStatistics { get; set; }
+        public bool HasTurn { get; set; }
     }
 }

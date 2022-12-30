@@ -52,7 +52,8 @@ namespace Pin.CricketDarts.Core.Services
                         GamesLost = p.PersonalStatistics.GamesLost,
                         GamesWon = p.PersonalStatistics.GamesWon,
                         TriplesThrown = p.PersonalStatistics.TriplesThrown,
-                    }
+                    },
+                    HasTurn= p.HasTurn,
                 }),
                 ScoreBoardEntries = g.ScoreBoard.Select(x => new ScoreBoardEntryResponseDto
                 {

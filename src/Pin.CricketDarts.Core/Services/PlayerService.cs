@@ -32,7 +32,8 @@ namespace Pin.CricketDarts.Core.Services
                     GamesLost = playerRequestDto.PersonalStatistics.GamesLost,
                     GamesWon = playerRequestDto.PersonalStatistics.GamesWon,
                     TriplesThrown = playerRequestDto.PersonalStatistics.TriplesThrown
-                }
+                },
+                HasTurn = playerRequestDto.HasTurn
             };
 
             await _playerRepository.AddAsync(player);
@@ -52,7 +53,8 @@ namespace Pin.CricketDarts.Core.Services
                     GamesLost = r.PersonalStatistics.GamesLost,
                     GamesWon = r.PersonalStatistics.GamesWon,
                     TriplesThrown = r.PersonalStatistics.TriplesThrown
-                }
+                },
+                HasTurn= r.HasTurn
             }).ToList();
 
             return dtos;

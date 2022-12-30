@@ -8,5 +8,6 @@ namespace Pin.CricketDarts.Server.Models
         [Required(ErrorMessage = "Please fill in a name")]
         [StringLength(10, ErrorMessage = "Name is too long.")]
         public string Name { get; set; }
+        public bool HasTurn { get; set; }
     }
 }

@@ -27,7 +27,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                     GamesLost = 0,
                     GamesWon = 0,
                     TriplesThrown = 0,
-                }
+                },
+                HasTurn = player.HasTurn
             };
 
             return _httpClient.PostAsJsonAsync<PlayerRequestDto>(baseUrl, dto);
@@ -40,7 +41,8 @@ namespace Pin.CricketDarts.Server.Services.Api
             return players.Select(p => new Player
             {
                 Name = p.Name,
-                Id = p.Id
+                Id = p.Id,
+                HasTurn= p.HasTurn,
             }).ToList();
         }
     }
