@@ -1,6 +1,7 @@
 ﻿using Pin.CricketDarts.Server.Models;
 using Pin.CricketDarts.Server.Services.Interfaces;
 using Pin.CricketDarts.Shared;
+using System.Net.Http.Json;
 
 namespace Pin.CricketDarts.Server.Services.Api
 {
@@ -34,8 +35,23 @@ namespace Pin.CricketDarts.Server.Services.Api
             {
                 Name = p.Name,
                 Id = p.Id,
-                HasTurn= p.HasTurn,
+                HasTurn = p.HasTurn,
             }).ToList();
+        }
+        public async Task UpdatePlayer(Player player)
+        {
+            var dto = new PlayerRequestDto
+            {
+                Name = player.Name,
+                Triples = player.Triples,
+                Doubles = player.Doubles,
+                CurrentAmountOfThrows = player.CurrentAmountOfThrows,
+                CurrentTotalScore = player.CurrentTotalScore,
+                HasTurn = player.HasTurn,
+                Id = player.Id,
+            };
+            await _httpClient.PutAsJsonAsync<PlayerRequestDto>($"{baseUrl}", dto);
+
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Pin.CricketDarts.Core.Services
             {
                 Id = r.Id,
                 Name = r.Name,
-                HasTurn= r.HasTurn,
+                HasTurn = r.HasTurn,
             }).ToList();
 
             return dtos;
@@ -47,9 +47,20 @@ namespace Pin.CricketDarts.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<PlayerResponseDto> UpdateAsync(PlayerRequestDto playerRequestDto)
+        public async Task UpdateAsync(PlayerRequestDto playerRequestDto)
         {
-            throw new NotImplementedException();
+            var player = new Player
+            {
+                Id = playerRequestDto.Id,
+                Name = playerRequestDto.Name,
+                HasTurn = playerRequestDto.HasTurn,
+                Triples = playerRequestDto.Triples,
+                Doubles = playerRequestDto.Doubles,
+                CurrentTotalScore = playerRequestDto.CurrentTotalScore,
+                CurrentAmountOfThrows = playerRequestDto.CurrentAmountOfThrows
+            };
+
+            await _playerRepository.UpdateAsync(player);
         }
     }
 }

@@ -45,7 +45,11 @@ namespace Pin.CricketDarts.Core.Services
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    HasTurn= p.HasTurn,
+                    HasTurn = p.HasTurn,
+                    CurrentAmountOfThrows = p.CurrentAmountOfThrows,
+                    CurrentTotalScore = p.CurrentTotalScore,
+                    Doubles = p.Doubles,
+                    Triples = p.Triples
                 }),
                 ScoreBoardEntries = g.ScoreBoard.Select(x => new ScoreBoardEntryResponseDto
                 {
@@ -53,7 +57,7 @@ namespace Pin.CricketDarts.Core.Services
                     GameId = x.GameId,
                     PlayerId = x.PlayerId,
                     Status = (int)x.Status,
-                    Target = x.Target
+                    Target = x.Target,
                 })
             }).ToList();
         }
