@@ -39,13 +39,6 @@ namespace Pin.CricketDarts.Server.Services.Api
                     Name = c.Name,
                     HasTurn= c.HasTurn,
                 }).ToList(),
-                Scores = p.Scores.Select(s => new Score
-                {
-                    Id = s.Id,
-                    PlayerId = s.PlayerId,
-                    GameId = s.GameId,
-                    TotalScore = s.TotalScore
-                }).ToList(),
                 ScoreBoardEntries = p.ScoreBoardEntries.Select(s => new ScoreBoardEntry
                 {
                     GameId = s.Id,
@@ -69,12 +62,6 @@ namespace Pin.CricketDarts.Server.Services.Api
                     PlayerId = s.PlayerId,
                     Status = s.Status,
                     Target = s.Target
-                }).ToList(),
-                Scores = game.Scores.Select(s => new ScoreRequestDto
-                {
-                    GameId = s.Id,
-                    PlayerId = s.PlayerId,
-                    TotalScore = Convert.ToInt32(s.TotalScore),
                 }).ToList(),
                 WinnerId = game.WinnerId,
             };

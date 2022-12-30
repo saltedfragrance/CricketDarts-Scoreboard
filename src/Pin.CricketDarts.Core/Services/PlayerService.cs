@@ -25,14 +25,6 @@ namespace Pin.CricketDarts.Core.Services
             {
                 Id = playerRequestDto.Id,
                 Name = playerRequestDto.Name,
-                PersonalStatistics = new PersonalStatistics
-                {
-                    Id = playerRequestDto.PersonalStatistics.Id,
-                    DoublesThrown = playerRequestDto.PersonalStatistics.DoublesThrown,
-                    GamesLost = playerRequestDto.PersonalStatistics.GamesLost,
-                    GamesWon = playerRequestDto.PersonalStatistics.GamesWon,
-                    TriplesThrown = playerRequestDto.PersonalStatistics.TriplesThrown
-                },
                 HasTurn = playerRequestDto.HasTurn
             };
 
@@ -46,14 +38,6 @@ namespace Pin.CricketDarts.Core.Services
             {
                 Id = r.Id,
                 Name = r.Name,
-                PersonalStatistics = new PersonalStatisticsResponseDto
-                {
-                    Id = r.PersonalStatistics.Id,
-                    DoublesThrown = r.PersonalStatistics.DoublesThrown,
-                    GamesLost = r.PersonalStatistics.GamesLost,
-                    GamesWon = r.PersonalStatistics.GamesWon,
-                    TriplesThrown = r.PersonalStatistics.TriplesThrown
-                },
                 HasTurn= r.HasTurn
             }).ToList();
 

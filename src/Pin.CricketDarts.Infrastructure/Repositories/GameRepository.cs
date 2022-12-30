@@ -19,7 +19,7 @@ namespace Pin.CricketDarts.Infrastructure.Repositories
 
         public override async Task<IEnumerable<Game>> GetAllAsync()
         {
-            return await _dbContext.Set<Game>().Include(x => x.PlayerGames).Include(g => g.ScoreBoard).Include(e => e.Scores).ToListAsync();
+            return await _dbContext.Set<Game>().Include(x => x.PlayerGames).Include(g => g.ScoreBoard).ToListAsync();
         }
     }
 }

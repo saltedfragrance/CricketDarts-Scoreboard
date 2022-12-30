@@ -20,14 +20,6 @@ namespace Pin.CricketDarts.Server.Services.Api
             {
                 Name = player.Name,
                 Id = Guid.NewGuid(),
-                PersonalStatistics = new PersonalStatisticsRequestDto
-                {
-                    Id = Guid.NewGuid(),
-                    DoublesThrown = 0,
-                    GamesLost = 0,
-                    GamesWon = 0,
-                    TriplesThrown = 0,
-                },
                 HasTurn = player.HasTurn
             };
 

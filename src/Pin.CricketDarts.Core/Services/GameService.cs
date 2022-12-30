@@ -45,14 +45,6 @@ namespace Pin.CricketDarts.Core.Services
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    PersonalStatistics = new PersonalStatisticsResponseDto
-                    {
-                        Id = p.PersonalStatistics.Id,
-                        DoublesThrown = p.PersonalStatistics.DoublesThrown,
-                        GamesLost = p.PersonalStatistics.GamesLost,
-                        GamesWon = p.PersonalStatistics.GamesWon,
-                        TriplesThrown = p.PersonalStatistics.TriplesThrown,
-                    },
                     HasTurn= p.HasTurn,
                 }),
                 ScoreBoardEntries = g.ScoreBoard.Select(x => new ScoreBoardEntryResponseDto
@@ -62,13 +54,6 @@ namespace Pin.CricketDarts.Core.Services
                     PlayerId = x.PlayerId,
                     Status = (int)x.Status,
                     Target = x.Target
-                }),
-                Scores = g.Scores.Select(x => new ScoreResponseDto
-                {
-                    Id = x.Id,
-                    TotalScore = x.TotalScore,
-                    PlayerId = x.PlayerId,
-                    GameId = x.GameId
                 })
             }).ToList();
         }
@@ -90,10 +75,6 @@ namespace Pin.CricketDarts.Core.Services
                     PlayerId = s.PlayerId,
                     Status = (TargetStatus)s.Status,
                     Target = s.Target,
-                }).ToList(),
-                Scores = gameRequestDto.Scores.Select(s => new Score
-                {
-
                 }).ToList(),
                 WinnerId = gameRequestDto.WinnerId,
 
