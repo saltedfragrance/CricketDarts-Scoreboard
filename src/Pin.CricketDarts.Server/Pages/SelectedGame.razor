@@ -7,7 +7,8 @@
 <PageTitle>Scoreboard</PageTitle>
 <ScoreBoard ActiveGame="ActiveGame"
             UpdateScoreBoard="UpdateScoreBoard"
-            CurrentTurnId="CurrentTurnId"></ScoreBoard>
+            CurrentTurnId="CurrentTurnId"
+            ToggleTurns="ToggleTurns"></ScoreBoard>
 
 @code{
     [Parameter]
@@ -16,6 +17,8 @@
     public Guid? CurrentTurnId { get; set; }
     [Parameter]
     public Game ActiveGame { get; set; } = new();
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -78,8 +81,7 @@
         await GetCurrentGame();
     }
 
-    private async Task<Turn>
-    CreateNewTurn(Guid playerId)
+    private async Task<Turn> CreateNewTurn(Guid playerId)
     {
         var toAdd = new Turn
         {
@@ -91,5 +93,21 @@
         await turnService.CreateTurn(toAdd);
 
         return toAdd;
+    }
+
+    private async Task ToggleTurns()
+    {
+        var playerHasNoTurn = ActiveGame.Players.Where(p => p.HasTurn).FirstOrDefault();
+        var playerHasTurn = ActiveGame.Players.Where(p => !p.HasTurn).FirstOrDefault();
+        playerHasTurn.HasTurn = true;
+        playerHasNoTurn.HasTurn = false;
+
+        var newTurn = await CreateNewTurn(playerHasTurn.Id);
+
+        ActiveGame.CurrentTurnId = newTurn.Id;
+        await turnService.CreateTurn(newTurn);
+        await gameService.UpdateGame(ActiveGame);
+        await playerService.UpdatePlayer(playerHasTurn);
+        await playerService.UpdatePlayer(playerHasNoTurn);
     }
 }

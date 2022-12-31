@@ -2,6 +2,8 @@
 {
     var playerOne = ActiveGame.Players.ElementAt(0);
     var playerTwo = ActiveGame.Players.ElementAt(1);
+    int j;
+    int i;
 
     <div class="row text-light d-flex justify-content-center text-black">
         <h1>Scoreboard</h1>
@@ -15,12 +17,13 @@
                 <div class="col"></div>
                 <div class="col">@playerTwo.Name</div>
             </div>
-            @for (int i = 20; i > 13; i--)
+            @for (i = 20, j = 20; i > 13; i--, j--)
             {
-                int target = i;
+                int targetPlayerOne = i;
+                int targetPlayerTwo = j;
                 <div class="row">
                     <div class="col border-bottom">
-                        <button class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(target)">
+                        <button disabled="@DisableInput(playerOne.Id)" class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(targetPlayerOne)">
                             @GetSymbol(i, playerOne.Id)
                         </button>
                     </div>
@@ -35,13 +38,14 @@
                         }
                     </div>
                     <div class="col border-bottom">
-                        <button class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(target)">
-                            @GetSymbol(i, playerTwo.Id)
+                        <button disabled="@DisableInput(playerTwo.Id)" class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(targetPlayerTwo)">
+                            @GetSymbol(j, playerTwo.Id)
                         </button>
                     </div>
                 </div>
             }
             <div>Current turn: @ActiveGame.Players.Where(p => p.HasTurn == true).FirstOrDefault().Name</div>
+            <div><button class="btn btn-light" @onclick="e => ToggleTurns.InvokeAsync()">New turn</button></div>
         </div>
     </div>
 }
@@ -54,6 +58,8 @@
     public Guid? CurrentTurnId { get; set; }
     [Parameter]
     public EventCallback<int> UpdateScoreBoard { get; set; }
+    [Parameter]
+    public EventCallback ToggleTurns { get; set; }
 
     private string GetSymbol(int target, Guid playerId)
     {
@@ -67,6 +73,13 @@
             else return "⨂";
         }
         else return "";
+    }
+
+    private bool DisableInput(Guid playerId)
+    {
+        var player = ActiveGame.Players.Where(p => p.Id == playerId).FirstOrDefault();
+        if (player.HasTurn == true) return false;
+        else return true;
     }
 }
 
