@@ -46,8 +46,6 @@ namespace Pin.CricketDarts.Core.Services
                     Id = p.Id,
                     Name = p.Name,
                     HasTurn = p.HasTurn,
-                    CurrentAmountOfThrows = p.CurrentAmountOfThrows,
-                    CurrentTotalScore = p.CurrentTotalScore,
                     Doubles = p.Doubles,
                     Triples = p.Triples
                 }),

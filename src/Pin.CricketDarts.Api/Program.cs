@@ -23,10 +23,13 @@ namespace Pin.CricketDarts.Api
             builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
             builder.Services.AddScoped<IGameRepository, GameRepository>();
             builder.Services.AddScoped<IScoreBoardEntryRepository, ScoreBoardEntryRepository>();
+            builder.Services.AddScoped<ITurnRepository, TurnRepository>();
 
             builder.Services.AddScoped<IPlayerService, PlayerService>();
             builder.Services.AddScoped<IGameService, GameService>();
             builder.Services.AddScoped<IScoreBoardEntryService, ScoreBoardEntryService>();
+            builder.Services.AddScoped<ITurnService, TurnService>();
+
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
