@@ -18,14 +18,10 @@
             @for (int i = 20; i > 13; i--)
             {
                 int target = i;
-
-                var scoreBoardEntryPlayerOneId = ActiveGame.ScoreBoardEntries.Where(s => s.Target == i && s.PlayerId == playerOne.Id).FirstOrDefault().Id;
-                var scoreBoardEntryPlayerTwoId = ActiveGame.ScoreBoardEntries.Where(s => s.Target == i && s.PlayerId == playerTwo.Id).FirstOrDefault().Id;
-
                 <div class="row">
                     <div class="col border-bottom">
-                        <button class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(scoreBoardEntryPlayerOneId)">
-                            @GetSymbol(target, playerOne.Id)
+                        <button class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(target)">
+                            @GetSymbol(i, playerOne.Id)
                         </button>
                     </div>
                     <div class="col border-start border-end">
@@ -39,8 +35,8 @@
                         }
                     </div>
                     <div class="col border-bottom">
-                        <button class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(scoreBoardEntryPlayerTwoId)">
-                            @GetSymbol(target, playerTwo.Id)
+                        <button class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(target)">
+                            @GetSymbol(i, playerTwo.Id)
                         </button>
                     </div>
                 </div>
@@ -57,16 +53,20 @@
     [Parameter]
     public Guid? CurrentTurnId { get; set; }
     [Parameter]
-    public EventCallback<Guid> UpdateScoreBoard { get; set; }
+    public EventCallback<int> UpdateScoreBoard { get; set; }
 
     private string GetSymbol(int target, Guid playerId)
     {
-        var targetStatus = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target).FirstOrDefault().Status;
+        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).FirstOrDefault();
+        if (entry != null)
+        {
+            var targetStatus = entry.Status;
 
-        if (targetStatus == 0) return "";
-        else if (targetStatus == 1) return "/";
-        else if (targetStatus == 2) return "x";
-        else return "⨂";
+            if (targetStatus == 1) return "/";
+            else if (targetStatus == 2) return "x";
+            else return "⨂";
+        }
+        else return "";
     }
 }
 

@@ -58,6 +58,7 @@ namespace Pin.CricketDarts.Core.Services
                     Target = x.Target,
                 }),
                 TournamentId = g.TournamentId,
+                CurrentTurnId = g.CurrentTurnId
             }).ToList();
         }
 
