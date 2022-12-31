@@ -44,6 +44,11 @@
                     </div>
                 </div>
             }
+            <div class="row">
+                <div class="col ">Current score: @playerOne.CurrentTotalScore</div>
+                <div class="col"></div>
+                <div class="col">Current score: @playerOne.CurrentTotalScore</div>
+            </div>
             <div>Current turn: @ActiveGame.Players.Where(p => p.HasTurn == true).FirstOrDefault().Name</div>
             <div><button class="btn btn-light" @onclick="e => ToggleTurns.InvokeAsync()">New turn</button></div>
         </div>
