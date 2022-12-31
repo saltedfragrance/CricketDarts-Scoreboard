@@ -56,7 +56,8 @@ namespace Pin.CricketDarts.Core.Services
                     PlayerId = x.PlayerId,
                     Status = (int)x.Status,
                     Target = x.Target,
-                })
+                }),
+                TournamentId = g.TournamentId,
             }).ToList();
         }
 
@@ -71,15 +72,9 @@ namespace Pin.CricketDarts.Core.Services
             {
                 Id = gameRequestDto.Id,
                 IsActive = gameRequestDto.IsActive,
-                ScoreBoard = gameRequestDto.ScoreBoardEntries.Select(s => new ScoreBoardEntry
-                {
-                    GameId = gameRequestDto.Id,
-                    PlayerId = s.PlayerId,
-                    Status = (TargetStatus)s.Status,
-                    Target = s.Target,
-                }).ToList(),
                 WinnerId = gameRequestDto.WinnerId,
-
+                CurrentTurnId = gameRequestDto.CurrentTurnId,
+                TournamentId= gameRequestDto.TournamentId,
             };
             await _gameRepository.UpdateAsync(game);
         }

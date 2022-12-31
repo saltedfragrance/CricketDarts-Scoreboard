@@ -18,8 +18,9 @@
             @for (int i = 20; i > 13; i--)
             {
                 int target = i;
-                Guid? scoreBoardEntryPlayerOneId = ActiveGame.ScoreBoardEntries.Where(s => s.Target == i && s.PlayerId == playerOne.Id).FirstOrDefault().Id;
-                Guid? scoreBoardEntryPlayerTwoId = ActiveGame.ScoreBoardEntries.Where(s => s.Target == i && s.PlayerId == playerTwo.Id).FirstOrDefault().Id;
+
+                var scoreBoardEntryPlayerOneId = ActiveGame.ScoreBoardEntries.Where(s => s.Target == i && s.PlayerId == playerOne.Id).FirstOrDefault().Id;
+                var scoreBoardEntryPlayerTwoId = ActiveGame.ScoreBoardEntries.Where(s => s.Target == i && s.PlayerId == playerTwo.Id).FirstOrDefault().Id;
 
                 <div class="row">
                     <div class="col border-bottom">
@@ -53,6 +54,8 @@
 @code {
     [Parameter]
     public Game ActiveGame { get; set; }
+    [Parameter]
+    public Guid? CurrentTurnId { get; set; }
     [Parameter]
     public EventCallback<Guid> UpdateScoreBoard { get; set; }
 

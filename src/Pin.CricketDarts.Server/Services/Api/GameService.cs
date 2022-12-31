@@ -20,7 +20,8 @@ namespace Pin.CricketDarts.Server.Services.Api
             var dto = new GameRequestDto
             {
                 Id = game.Id,
-                IsActive = game.IsActive
+                IsActive = game.IsActive,
+                CurrentTurnId = game.CurrentTurnId
             };
             return _httpClient.PostAsJsonAsync<GameRequestDto>(baseUrl, dto);
         }
@@ -52,6 +53,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                     Target = s.Target
                 }).ToList(),
                 WinnerId = p.WinnerId,
+                CurrentTurnId = p.CurrentTurnId,
+                TournamentId = p.TournamentId,
             }).ToList();
         }
 
@@ -76,7 +79,9 @@ namespace Pin.CricketDarts.Server.Services.Api
                     Doubles = p.Doubles,
                     HasTurn = p.HasTurn
                 }).ToList(),
-                WinnerId = game.WinnerId
+                WinnerId = game.WinnerId,
+                CurrentTurnId = game.CurrentTurnId,
+                TournamentId = game.TournamentId
             };
 
             await _httpClient.PutAsJsonAsync<GameRequestDto>($"{baseUrl}", dto);

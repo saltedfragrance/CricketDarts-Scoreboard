@@ -28,7 +28,8 @@ namespace Pin.CricketDarts.Core.Services
                 GameId = scoreBoardEntryRequestDto.GameId,
                 PlayerId = scoreBoardEntryRequestDto.PlayerId,
                 Status = (TargetStatus)scoreBoardEntryRequestDto.Status,
-                Target = scoreBoardEntryRequestDto.Target
+                Target = scoreBoardEntryRequestDto.Target,
+                TurnId = scoreBoardEntryRequestDto.CurrentTurnId
             };
             await _scoreBoardEntryRepository.AddAsync(scoreBoardEntry);
         }
@@ -62,7 +63,8 @@ namespace Pin.CricketDarts.Core.Services
                 GameId = scoreBoardEntryRequestDto.GameId,
                 PlayerId = scoreBoardEntryRequestDto.PlayerId,
                 Status = (TargetStatus)scoreBoardEntryRequestDto.Status,
-                Target = scoreBoardEntryRequestDto.Target
+                Target = scoreBoardEntryRequestDto.Target,
+                TurnId = scoreBoardEntryRequestDto.CurrentTurnId
             };
 
             await _scoreBoardEntryRepository.UpdateAsync(scoreBoardEntry);

@@ -38,7 +38,7 @@ namespace Pin.CricketDarts.Infrastructure.Data.Seeding
                 new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[2].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") },
                 new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[3].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") },
                 new Game{ Id = Guid.NewGuid(),  IsActive = false, WinnerId = players[4].Id, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") },
-                new Game{ Id = Guid.NewGuid(),  IsActive = true, TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") }
+                new Game{ Id = Guid.NewGuid(),  IsActive = true, CurrentTurnId = new Guid("3226B169-0211-4235-9AFD-869B8B79C05E"), TournamentId = new Guid("243407c9-d7e6-4192-a465-71076a592bf9") }
             };
 
             List<PlayerGames> playerGames = new List<PlayerGames>
