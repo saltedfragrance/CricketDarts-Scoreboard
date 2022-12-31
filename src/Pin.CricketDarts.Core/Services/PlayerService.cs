@@ -56,8 +56,7 @@ namespace Pin.CricketDarts.Core.Services
                 HasTurn = playerRequestDto.HasTurn,
                 Triples = playerRequestDto.Triples,
                 Doubles = playerRequestDto.Doubles,
-                CurrentTotalScore = playerRequestDto.CurrentTotalScore,
-                CurrentAmountOfThrows = playerRequestDto.CurrentAmountOfThrows
+                TotalPointsScored = playerRequestDto.CurrentTotalScore
             };
 
             await _playerRepository.UpdateAsync(player);

@@ -11,7 +11,7 @@ namespace Pin.CricketDarts.Core.Entities
     {
         public Guid PlayerId { get; set; }
         public int CurrentAmountOfThrows { get; set; }
-        public int CurrentTotalScore { get; set; }
+        public int PointsScored { get; set; }
         public ICollection<ScoreBoardEntry> ScoreBoardEntries { get; set; }
     }
 }

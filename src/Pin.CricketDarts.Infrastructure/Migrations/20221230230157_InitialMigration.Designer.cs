@@ -99,7 +99,7 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                     b.Property<int>("CurrentAmountOfThrows")
                         .HasColumnType("int");
 
-                    b.Property<int>("CurrentTotalScore")
+                    b.Property<int>("PointsScored")
                         .HasColumnType("int");
 
                     b.Property<int>("Doubles")

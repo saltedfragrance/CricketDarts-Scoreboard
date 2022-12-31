@@ -11,6 +11,7 @@ namespace Pin.CricketDarts.Core.Entities
     {
         public string Name { get; set; }
         public ICollection<PlayerGames> PlayerGames { get; set; }
+        public int TotalPointsScored { get; set; }
         public bool HasTurn { get; set; }
         public int Doubles { get; set; }
         public int Triples { get; set; }

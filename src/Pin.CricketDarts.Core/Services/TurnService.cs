@@ -24,7 +24,7 @@ namespace Pin.CricketDarts.Core.Services
             var turn = new Turn
             {
                 CurrentAmountOfThrows = turnRequestDto.CurrentAmountOfThrows,
-                CurrentTotalScore = turnRequestDto.CurrentTotalScore,
+                PointsScored = turnRequestDto.CurrentTotalScore,
                 Id = turnRequestDto.Id,
                 PlayerId = turnRequestDto.PlayerId
             };
@@ -39,7 +39,7 @@ namespace Pin.CricketDarts.Core.Services
             {
                 Id = t.Id,
                 CurrentAmountOfThrows = t.CurrentAmountOfThrows,
-                CurrentTotalScore = t.CurrentTotalScore,
+                CurrentTotalScore = t.PointsScored,
                 PlayerId = t.PlayerId
 
             });
@@ -56,7 +56,7 @@ namespace Pin.CricketDarts.Core.Services
             {
                 Id = turnRequestDto.Id,
                 PlayerId = turnRequestDto.PlayerId,
-                CurrentTotalScore = turnRequestDto.CurrentTotalScore,
+                PointsScored = turnRequestDto.CurrentTotalScore,
                 CurrentAmountOfThrows = turnRequestDto.CurrentAmountOfThrows
             };
 

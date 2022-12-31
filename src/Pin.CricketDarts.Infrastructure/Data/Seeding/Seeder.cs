@@ -47,11 +47,17 @@ namespace Pin.CricketDarts.Infrastructure.Data.Seeding
                 new PlayerGames{ GameId = games[5].Id, PlayerId = players[1].Id },
             };
 
+            List<Turn> turns = new List<Turn>
+            {
+                new Turn { Id = new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59"), CurrentAmountOfThrows = 3, PointsScored = 0, PlayerId = players[0].Id },
+                new Turn { Id = new Guid("3226b169-0211-4235-9afd-869b8b79c05e"), CurrentAmountOfThrows = 0, PointsScored = 0, PlayerId = players[1].Id },
+            };
+
             List<ScoreBoardEntry> scoreBoardEntries = new List<ScoreBoardEntry>
             {
-                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 16, Status = TargetStatus.Closed },
-                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 15, Status = TargetStatus.OnePoint },
-                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[1].Id, Target = 17, Status = TargetStatus.TwoPoint }
+                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 16, Status = TargetStatus.Closed, TurnId = new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59") },
+                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 15, Status = TargetStatus.OnePoint, TurnId = new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59") },
+                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 17, Status = TargetStatus.TwoPoint, TurnId = new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59") }
             };
 
             modelBuilder.Entity<Tournament>().HasData(tournaments);

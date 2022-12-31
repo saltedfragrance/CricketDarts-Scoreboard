@@ -111,7 +111,7 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Players",
-                columns: new[] { "Id", "CurrentAmountOfThrows", "CurrentTotalScore", "Doubles", "HasTurn", "Name", "Triples" },
+                columns: new[] { "Id", "CurrentAmountOfThrows", "PointsScored", "Doubles", "HasTurn", "Name", "Triples" },
                 values: new object[,]
                 {
                     { new Guid("279d330d-b4ed-4a8d-876a-09ed8e708cef"), 0, 0, 0, false, "Fabienne", 0 },
