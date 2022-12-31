@@ -1,6 +1,7 @@
 ﻿@page "/SelectedGame/{SelectedGameId:guid}"
 @inject IGameService gameService;
 @inject IScoreBoardEntryService scoreBoardEntryService;
+@inject IPlayerService PlayerService;
 
 <PageTitle>Scoreboard</PageTitle>
 <ScoreBoard ActiveGame="ActiveGame"
@@ -21,6 +22,9 @@
     private async Task GetCurrentGame()
     {
         ActiveGame = (await gameService.GetGames()).Where(g => g.Id == SelectedGameId).FirstOrDefault();
+        //indien nieuwe game, turn van 1 player op true zetten
+        if (ActiveGame.Players.All(p => !p.HasTurn)) ActiveGame.Players.ElementAt(0).HasTurn = true;
+        await PlayerService.UpdatePlayer(ActiveGame.Players.ElementAt(0));
     }
     private async Task UpdateScoreBoard(Guid id)
     {

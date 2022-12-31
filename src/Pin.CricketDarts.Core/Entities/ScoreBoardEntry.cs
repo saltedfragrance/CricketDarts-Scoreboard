@@ -10,6 +10,7 @@ namespace Pin.CricketDarts.Core.Entities
 {
     public class ScoreBoardEntry : BaseEntity
     {
+        public Guid TurnId { get; set; }
         public Guid GameId { get; set; }
         public Game Game { get; set; }
         public Guid PlayerId { get; set; }

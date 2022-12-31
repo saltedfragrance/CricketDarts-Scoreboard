@@ -44,6 +44,7 @@
                     </div>
                 </div>
             }
+            <div>Current turn: @ActiveGame.Players.Where(p => p.HasTurn == true).FirstOrDefault().Name</div>
         </div>
     </div>
 }

@@ -68,6 +68,14 @@ namespace Pin.CricketDarts.Server.Services.Api
                     Status = s.Status,
                     Target = s.Target
                 }).ToList(),
+                Players = game.Players.Select(p => new PlayerRequestDto
+                {
+                    Name = p.Name,
+                    CurrentAmountOfThrows = p.CurrentAmountOfThrows,
+                    CurrentTotalScore = p.CurrentTotalScore,
+                    Doubles = p.Doubles,
+                    HasTurn = p.HasTurn
+                }).ToList(),
                 WinnerId = game.WinnerId
             };
 
