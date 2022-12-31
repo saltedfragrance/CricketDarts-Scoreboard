@@ -45,7 +45,7 @@ namespace Pin.CricketDarts.Server.Services.Api
                 }).ToList(),
                 ScoreBoardEntries = p.ScoreBoardEntries.Select(s => new ScoreBoardEntry
                 {
-                    GameId = s.Id,
+                    GameId = s.GameId,
                     Id = s.Id,
                     PlayerId = s.PlayerId,
                     Status = s.Status,

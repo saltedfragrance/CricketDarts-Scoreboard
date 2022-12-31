@@ -15,9 +15,8 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TotalPointsScored = table.Column<int>(type: "int", nullable: false),
                     HasTurn = table.Column<bool>(type: "bit", nullable: false),
-                    CurrentAmountOfThrows = table.Column<int>(type: "int", nullable: false),
-                    CurrentTotalScore = table.Column<int>(type: "int", nullable: false),
                     Doubles = table.Column<int>(type: "int", nullable: false),
                     Triples = table.Column<int>(type: "int", nullable: false)
                 },
@@ -39,11 +38,26 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Turns",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CurrentAmountOfThrows = table.Column<int>(type: "int", nullable: false),
+                    PointsScored = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Turns", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Games",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TournamentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CurrentTurnId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     WinnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -87,6 +101,7 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TurnId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Target = table.Column<int>(type: "int", nullable: false),
@@ -107,19 +122,25 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                         principalTable: "Players",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ScoreBoardEntries_Turns_TurnId",
+                        column: x => x.TurnId,
+                        principalTable: "Turns",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "Players",
-                columns: new[] { "Id", "CurrentAmountOfThrows", "PointsScored", "Doubles", "HasTurn", "Name", "Triples" },
+                columns: new[] { "Id", "Doubles", "HasTurn", "Name", "TotalPointsScored", "Triples" },
                 values: new object[,]
                 {
-                    { new Guid("279d330d-b4ed-4a8d-876a-09ed8e708cef"), 0, 0, 0, false, "Fabienne", 0 },
-                    { new Guid("2f5ae907-4d60-4eaf-9140-55e22759c124"), 0, 0, 0, false, "Butch", 0 },
-                    { new Guid("446a8e92-ca2a-4721-b8ec-d3ab4dd1b516"), 0, 0, 0, false, "JohnTravolta", 0 },
-                    { new Guid("642ba299-2a35-479f-b6df-3e3f893820cb"), 0, 0, 0, false, "BruceWillis", 0 },
-                    { new Guid("91e4d9c4-ceb6-4259-ace1-9b24f57c704d"), 0, 0, 0, false, "VincentVega", 0 },
-                    { new Guid("d74a7203-626b-4e84-9366-b0f4812b3925"), 0, 0, 0, false, "TheWolf", 0 }
+                    { new Guid("0948da66-68d7-4c84-b4ba-a5cf29485a69"), 0, false, "BruceWillis", 0, 0 },
+                    { new Guid("216ff991-0c8f-488a-830b-3158e3185ee9"), 0, false, "Fabienne", 0, 0 },
+                    { new Guid("2c5753ab-656c-47a3-89b0-08a90a087f5c"), 0, false, "TheWolf", 0, 0 },
+                    { new Guid("86b5a624-8435-4ffb-9eba-2a5a95445e6e"), 0, false, "Butch", 0, 0 },
+                    { new Guid("95adddc1-90c7-4f23-8627-79a405469ac4"), 0, false, "VincentVega", 0, 0 },
+                    { new Guid("a3777259-7f5d-4e4b-807d-9896355a23e5"), 0, false, "JohnTravolta", 0, 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -128,16 +149,25 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                 values: new object[] { new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), false });
 
             migrationBuilder.InsertData(
-                table: "Games",
-                columns: new[] { "Id", "IsActive", "TournamentId", "WinnerId" },
+                table: "Turns",
+                columns: new[] { "Id", "CurrentAmountOfThrows", "PlayerId", "PointsScored" },
                 values: new object[,]
                 {
-                    { new Guid("1aed4333-70c5-42e3-9e4c-dfa15e09a52f"), false, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("642ba299-2a35-479f-b6df-3e3f893820cb") },
-                    { new Guid("1b706538-3251-4494-b690-ccfbb1fae3b6"), false, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("279d330d-b4ed-4a8d-876a-09ed8e708cef") },
-                    { new Guid("22b1c4ae-e451-4b63-9c5b-7885d83ae516"), false, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("446a8e92-ca2a-4721-b8ec-d3ab4dd1b516") },
-                    { new Guid("4d1c0da4-2df9-4d08-b6f9-0ce74b225545"), false, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("91e4d9c4-ceb6-4259-ace1-9b24f57c704d") },
-                    { new Guid("71c86e97-54a8-454d-a448-ff5727be2568"), true, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("00000000-0000-0000-0000-000000000000") },
-                    { new Guid("da70b0a1-d0e8-45df-9af0-2fe0fdcc45dc"), false, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("2f5ae907-4d60-4eaf-9140-55e22759c124") }
+                    { new Guid("3226b169-0211-4235-9afd-869b8b79c05e"), 0, new Guid("0948da66-68d7-4c84-b4ba-a5cf29485a69"), 0 },
+                    { new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59"), 3, new Guid("95adddc1-90c7-4f23-8627-79a405469ac4"), 0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Games",
+                columns: new[] { "Id", "CurrentTurnId", "IsActive", "TournamentId", "WinnerId" },
+                values: new object[,]
+                {
+                    { new Guid("5966d61e-c2f8-47c3-9fd9-b8c086fd7dd2"), new Guid("00000000-0000-0000-0000-000000000000"), false, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("86b5a624-8435-4ffb-9eba-2a5a95445e6e") },
+                    { new Guid("604d7cda-53ff-44b7-b488-0a721cd08f12"), new Guid("00000000-0000-0000-0000-000000000000"), false, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("0948da66-68d7-4c84-b4ba-a5cf29485a69") },
+                    { new Guid("78eb258a-eff6-4613-b4de-56410071ffb9"), new Guid("00000000-0000-0000-0000-000000000000"), false, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("95adddc1-90c7-4f23-8627-79a405469ac4") },
+                    { new Guid("be450d01-a216-4bd1-be2c-7e07f1e8bfe9"), new Guid("00000000-0000-0000-0000-000000000000"), false, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("a3777259-7f5d-4e4b-807d-9896355a23e5") },
+                    { new Guid("d866da0b-8660-4d3b-aa7c-6401ee71028d"), new Guid("00000000-0000-0000-0000-000000000000"), true, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("00000000-0000-0000-0000-000000000000") },
+                    { new Guid("efa3002a-7845-4d4d-875d-56ea63fc3916"), new Guid("00000000-0000-0000-0000-000000000000"), false, new Guid("243407c9-d7e6-4192-a465-71076a592bf9"), new Guid("216ff991-0c8f-488a-830b-3158e3185ee9") }
                 });
 
             migrationBuilder.InsertData(
@@ -145,18 +175,18 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                 columns: new[] { "GameId", "PlayerId" },
                 values: new object[,]
                 {
-                    { new Guid("71c86e97-54a8-454d-a448-ff5727be2568"), new Guid("642ba299-2a35-479f-b6df-3e3f893820cb") },
-                    { new Guid("71c86e97-54a8-454d-a448-ff5727be2568"), new Guid("91e4d9c4-ceb6-4259-ace1-9b24f57c704d") }
+                    { new Guid("d866da0b-8660-4d3b-aa7c-6401ee71028d"), new Guid("0948da66-68d7-4c84-b4ba-a5cf29485a69") },
+                    { new Guid("d866da0b-8660-4d3b-aa7c-6401ee71028d"), new Guid("95adddc1-90c7-4f23-8627-79a405469ac4") }
                 });
 
             migrationBuilder.InsertData(
                 table: "ScoreBoardEntries",
-                columns: new[] { "Id", "GameId", "PlayerId", "Status", "Target" },
+                columns: new[] { "Id", "GameId", "PlayerId", "Status", "Target", "TurnId" },
                 values: new object[,]
                 {
-                    { new Guid("0b11e093-7d4e-4539-97bc-598538e485d2"), new Guid("71c86e97-54a8-454d-a448-ff5727be2568"), new Guid("91e4d9c4-ceb6-4259-ace1-9b24f57c704d"), 3, 16 },
-                    { new Guid("4744ca4a-eafa-43f3-ad7b-06b6ff02b6f0"), new Guid("71c86e97-54a8-454d-a448-ff5727be2568"), new Guid("642ba299-2a35-479f-b6df-3e3f893820cb"), 2, 17 },
-                    { new Guid("48aa24cd-f770-4dbd-a0d7-6bc5df1795a9"), new Guid("71c86e97-54a8-454d-a448-ff5727be2568"), new Guid("91e4d9c4-ceb6-4259-ace1-9b24f57c704d"), 1, 15 }
+                    { new Guid("68f7110b-edf6-4b3e-b052-af9016243eef"), new Guid("d866da0b-8660-4d3b-aa7c-6401ee71028d"), new Guid("95adddc1-90c7-4f23-8627-79a405469ac4"), 2, 17, new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59") },
+                    { new Guid("9efc7505-a3d6-4222-8ccc-83f7a43ef10d"), new Guid("d866da0b-8660-4d3b-aa7c-6401ee71028d"), new Guid("95adddc1-90c7-4f23-8627-79a405469ac4"), 3, 16, new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59") },
+                    { new Guid("c0958e1e-a9e9-431d-a00f-5b74670c646c"), new Guid("d866da0b-8660-4d3b-aa7c-6401ee71028d"), new Guid("95adddc1-90c7-4f23-8627-79a405469ac4"), 1, 15, new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -178,6 +208,11 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
                 name: "IX_ScoreBoardEntries_PlayerId",
                 table: "ScoreBoardEntries",
                 column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ScoreBoardEntries_TurnId",
+                table: "ScoreBoardEntries",
+                column: "TurnId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -193,6 +228,9 @@ namespace Pin.CricketDarts.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Players");
+
+            migrationBuilder.DropTable(
+                name: "Turns");
 
             migrationBuilder.DropTable(
                 name: "Tournaments");

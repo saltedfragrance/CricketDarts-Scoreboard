@@ -64,6 +64,7 @@ namespace Pin.CricketDarts.Infrastructure.Data.Seeding
             modelBuilder.Entity<Player>().HasData(players);
             modelBuilder.Entity<Game>().HasData(games);
             modelBuilder.Entity<PlayerGames>().HasData(playerGames);
+            modelBuilder.Entity<Turn>().HasData(turns);
             modelBuilder.Entity<ScoreBoardEntry>().HasData(scoreBoardEntries);
         }
     }
