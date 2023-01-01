@@ -22,7 +22,10 @@
                 int targetPlayerOne = i;
                 int targetPlayerTwo = j;
                 <div class="row">
-                    <div class="col border-bottom">
+                    <div class="col border">
+                        @GetScore(i, playerOne.Id)
+                    </div>
+                    <div class="col border">
                         <button disabled="@DisableInput(playerOne.Id)" class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(targetPlayerOne)">
                             @GetSymbol(i, playerOne.Id)
                         </button>
@@ -37,10 +40,13 @@
                             <span>@i</span>
                         }
                     </div>
-                    <div class="col border-bottom">
+                    <div class="col border">
                         <button disabled="@DisableInput(playerTwo.Id)" class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(targetPlayerTwo)">
                             @GetSymbol(j, playerTwo.Id)
                         </button>
+                    </div>
+                    <div class="col border">
+                        @GetScore(i, playerTwo.Id)
                     </div>
                 </div>
             }
@@ -78,6 +84,16 @@
             else return "⨂";
         }
         else return "";
+    }
+
+    private int GetScore(int target, Guid playerId)
+    {
+        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).FirstOrDefault();
+        if (entry != null)
+        {
+            return entry.Score;
+        }
+        else return 0;
     }
 
     private bool DisableInput(Guid playerId)

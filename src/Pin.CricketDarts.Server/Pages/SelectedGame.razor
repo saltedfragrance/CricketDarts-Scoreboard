@@ -55,6 +55,7 @@
 
         if (entry != null)
         {
+            int previousStatus = entry.Status;
             var status = entry.Status;
             var toUpdate = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(s => s.Id == entry.Id).FirstOrDefault();
 
@@ -62,6 +63,11 @@
 
             if (status == 1) toUpdate.Status = 2;
             else toUpdate.Status = 3;
+
+            if (toUpdate.Score < ((toUpdate.Target * 3) * 2) && toUpdate.Status == 3 && previousStatus == 3)
+            {
+                toUpdate.Score +=target;
+            }
 
             await scoreBoardEntryService.UpdateScoreBoardEntry(toUpdate);
         }
@@ -115,7 +121,7 @@
     //{
     //    var scoreBoardEntries = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(s => s.PlayerId == ActiveGame.Players.Where(p => p.HasTurn).FirstOrDefault().Id
     //                                                                                  && s.TurnId == ActiveGame.CurrentTurnId).ToList();
-    //    if(scoreBoardEntries.All(s => s.Status == 3) || 
+    //    if(scoreBoardEntries.All(s => s.Status == 3) ||
     //       )
     //}
 }
