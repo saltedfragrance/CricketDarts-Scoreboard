@@ -55,8 +55,14 @@
                 <div class="col"></div>
                 <div class="col">Current score: @playerOne.CurrentTotalScore</div>
             </div>
-            <div>Current turn: @ActiveGame.Players.Where(p => p.HasTurn == true).FirstOrDefault().Name</div>
-            <div><button class="btn btn-light" @onclick="e => ToggleTurns.InvokeAsync()">New turn</button></div>
+            <div hidden="@ActiveGame.IsActive">
+                <div>Current turn: @ActiveGame.Players.Where(p => p.HasTurn == true).FirstOrDefault().Name</div>
+                <div><button class="btn btn-light" @onclick="e => ToggleTurns.InvokeAsync()">New turn</button></div>
+            </div>
+            <div hidden="@(!ActiveGame.IsActive)">
+                <div>The game has ended!</div>
+                <div>The winner is: </div>
+            </div>
         </div>
     </div>
 }
@@ -99,6 +105,7 @@
     private bool DisableInput(Guid playerId)
     {
         var player = ActiveGame.Players.Where(p => p.Id == playerId).FirstOrDefault();
+        if (!ActiveGame.IsActive) return true;
         if (player.HasTurn == true) return false;
         else return true;
     }
