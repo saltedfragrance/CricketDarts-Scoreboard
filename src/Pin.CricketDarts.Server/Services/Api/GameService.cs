@@ -51,7 +51,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                     PlayerId = s.PlayerId,
                     Status = s.Status,
                     Target = s.Target,
-                    Score = s.Score
+                    Score = s.Score,
+                    TurnId = s.CurrentTurnId
                 }).ToList(),
                 WinnerId = p.WinnerId,
                 CurrentTurnId = p.CurrentTurnId,

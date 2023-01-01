@@ -53,13 +53,13 @@
             <div class="row">
                 <div class="col ">Current score: @playerOne.CurrentTotalScore</div>
                 <div class="col"></div>
-                <div class="col">Current score: @playerOne.CurrentTotalScore</div>
-            </div>
-            <div hidden="@ActiveGame.IsActive">
-                <div>Current turn: @ActiveGame.Players.Where(p => p.HasTurn == true).FirstOrDefault().Name</div>
-                <div><button class="btn btn-light" @onclick="e => ToggleTurns.InvokeAsync()">New turn</button></div>
+                <div class="col">Current score: @playerTwo.CurrentTotalScore</div>
             </div>
             <div hidden="@(!ActiveGame.IsActive)">
+                <div>Current turn: @CurrentPlayer.Name</div>
+                <div><button class="btn btn-light" @onclick="e => ToggleTurns.InvokeAsync()">New turn</button></div>
+            </div>
+            <div hidden="@ActiveGame.IsActive">
                 <div>The game has ended!</div>
                 <div>The winner is: </div>
             </div>
@@ -72,15 +72,15 @@
     [Parameter]
     public Game ActiveGame { get; set; }
     [Parameter]
-    public Guid? CurrentTurnId { get; set; }
-    [Parameter]
     public EventCallback<int> UpdateScoreBoard { get; set; }
     [Parameter]
     public EventCallback ToggleTurns { get; set; }
+    [Parameter]
+    public Player CurrentPlayer { get; set; }
 
     private string GetSymbol(int target, Guid playerId)
     {
-        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).FirstOrDefault();
+        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).OrderByDescending(x => x.Status).FirstOrDefault();
         if (entry != null)
         {
             var targetStatus = entry.Status;
@@ -94,7 +94,7 @@
 
     private int GetScore(int target, Guid playerId)
     {
-        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).FirstOrDefault();
+        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).OrderByDescending(x => x.Status).FirstOrDefault();
         if (entry != null)
         {
             return entry.Score;

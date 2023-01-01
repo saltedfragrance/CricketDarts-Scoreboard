@@ -7,18 +7,16 @@
 <PageTitle>Scoreboard</PageTitle>
 <ScoreBoard ActiveGame="ActiveGame"
             UpdateScoreBoard="UpdateScoreBoard"
-            CurrentTurnId="CurrentTurnId"
-            ToggleTurns="ToggleTurns"></ScoreBoard>
+            ToggleTurns="ToggleTurns"
+            CurrentPlayer="CurrentPlayer"></ScoreBoard>
 
 @code{
     [Parameter]
     public Guid SelectedGameId { get; set; }
     [Parameter]
-    public Guid? CurrentTurnId { get; set; }
-    [Parameter]
     public Game ActiveGame { get; set; } = new();
-
-
+    [Parameter]
+    public Player CurrentPlayer { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -29,29 +27,34 @@
     {
         //game is zowiezo altijd aanwezig
         ActiveGame = (await gameService.GetGames()).Where(g => g.Id == SelectedGameId).FirstOrDefault();
-        var playerOne = ActiveGame.Players.ElementAt(0);
+        CurrentPlayer = ActiveGame.Players.Where(p => p.HasTurn == true).FirstOrDefault();
 
         //als het een nieuwe game is, stel de beurt in
         if (ActiveGame.Players.All(p => !p.HasTurn))
         {
-            playerOne.HasTurn = true;
-            await playerService.UpdatePlayer(playerOne);
+            CurrentPlayer = ActiveGame.Players.ElementAt(0);
+            CurrentPlayer.HasTurn = true;
+            await playerService.UpdatePlayer(CurrentPlayer);
         }
-        if (ActiveGame.CurrentTurnId == Guid.Empty)
+        if (ActiveGame.CurrentTurnId == null)
         {
-            var turn = await CreateNewTurn(playerOne.Id);
-            CurrentTurnId = turn.Id;
+            var turn = await CreateNewTurn(CurrentPlayer.Id);
             ActiveGame.CurrentTurnId = turn.Id;
             await gameService.UpdateGame(ActiveGame);
         }
-        else CurrentTurnId = ActiveGame.CurrentTurnId;
     }
     private async Task UpdateScoreBoard(int target)
     {
         var entry = ActiveGame.ScoreBoardEntries.Where(s => s.Target == target
-                                                        && s.GameId == ActiveGame.Id
-                                                        && s.PlayerId == ActiveGame.Players.Where(p => p.HasTurn).FirstOrDefault().Id)
-                                                        .FirstOrDefault();
+                                            && s.GameId == ActiveGame.Id
+                                            && s.PlayerId == CurrentPlayer.Id
+                                            && s.TurnId == ActiveGame.CurrentTurnId)
+                                            .FirstOrDefault();
+
+        var previousEntry = ActiveGame.ScoreBoardEntries.Where(s => s.Target == target
+                                                    && s.GameId == ActiveGame.Id
+                                                    && s.PlayerId == CurrentPlayer.Id)
+                                                    .FirstOrDefault();
 
         if (entry != null)
         {
@@ -59,14 +62,21 @@
             var status = entry.Status;
             var toUpdate = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(s => s.Id == entry.Id).FirstOrDefault();
 
-            if (toUpdate.TurnId == null) toUpdate.TurnId = CurrentTurnId;
+            if (toUpdate.TurnId == null) toUpdate.TurnId = ActiveGame.CurrentTurnId;
 
             if (status == 1) toUpdate.Status = 2;
             else toUpdate.Status = 3;
 
-            if (toUpdate.Score < ((toUpdate.Target * 3) * 2) && toUpdate.Status == 3 && previousStatus == 3)
+            if (toUpdate.Target != 14)
             {
-                toUpdate.Score +=target;
+                if (toUpdate.Score < ((toUpdate.Target * 3) * 2) && toUpdate.Status == 3 && previousStatus == 3)
+                {
+                    toUpdate.Score += target;
+                }
+            }
+            else
+            {
+                if (toUpdate.Score < ((25 * 3) * 2) && toUpdate.Status == 3 && previousStatus == 3) toUpdate.Score += 25;
             }
 
             await scoreBoardEntryService.UpdateScoreBoardEntry(toUpdate);
@@ -77,15 +87,16 @@
             {
                 GameId = ActiveGame.Id,
                 Id = Guid.NewGuid(),
-                PlayerId = ActiveGame.Players.Where(p => p.HasTurn).FirstOrDefault().Id,
-                Status = 1,
-                TurnId = CurrentTurnId,
+                PlayerId = CurrentPlayer.Id,
+                Status = previousEntry == null ? 1 : (previousEntry.Status == 1 ? 2 : 3),
+                TurnId = ActiveGame.CurrentTurnId,
                 Target = target
             };
+
             await scoreBoardEntryService.CreateScoreBoardEntry(toAdd);
         }
         await GetCurrentGame();
-        //await CalculateThrows();
+        await CalculateThrows();
     }
 
     private async Task<Turn> CreateNewTurn(Guid playerId)
@@ -104,24 +115,50 @@
 
     private async Task ToggleTurns()
     {
-        var playerHasNoTurn = ActiveGame.Players.Where(p => p.HasTurn).FirstOrDefault();
-        var playerHasTurn = ActiveGame.Players.Where(p => !p.HasTurn).FirstOrDefault();
-        playerHasTurn.HasTurn = true;
-        playerHasNoTurn.HasTurn = false;
+        var otherPlayer = ActiveGame.Players.Where(p => !p.HasTurn).FirstOrDefault();
+        otherPlayer.HasTurn = true;
+        CurrentPlayer.HasTurn = false;
 
-        var newTurn = await CreateNewTurn(playerHasTurn.Id);
+        var newTurn = await CreateNewTurn(otherPlayer.Id);
 
         ActiveGame.CurrentTurnId = newTurn.Id;
+        await playerService.UpdatePlayer(otherPlayer);
+        await playerService.UpdatePlayer(CurrentPlayer);
         await gameService.UpdateGame(ActiveGame);
-        await playerService.UpdatePlayer(playerHasTurn);
-        await playerService.UpdatePlayer(playerHasNoTurn);
+        await GetCurrentGame();
     }
 
-    //private async Task CalculateThrows()
-    //{
-    //    var scoreBoardEntries = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(s => s.PlayerId == ActiveGame.Players.Where(p => p.HasTurn).FirstOrDefault().Id
-    //                                                                                  && s.TurnId == ActiveGame.CurrentTurnId).ToList();
-    //    if(scoreBoardEntries.All(s => s.Status == 3) ||
-    //       )
-    //}
+    private async Task CalculateThrows()
+    {
+        //kijken ofdat hij gewonnen heeft
+        //triples doubles stats calculeren en toevoegen
+        //currenttotalscore updaten
+        var scoreBoardEntries = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(s => s.PlayerId == CurrentPlayer.Id).ToList();
+
+        var CurrentPlayerEntries = scoreBoardEntries.Where(s => s.PlayerId == CurrentPlayer.Id
+                                                           && s.TurnId == ActiveGame.CurrentTurnId).ToList();
+
+        if (CurrentPlayerEntries.Where(s => s.Status == 3).Count() == 3 ||
+            CurrentPlayerEntries.Any(s => s.Score == ((s.Target * 3) * 2)) ||
+            CurrentPlayerEntries.Any(s => s.Score == 150))
+        {
+            await ToggleTurns();
+        }
+
+        foreach (var currentEntry in CurrentPlayerEntries)
+        {
+            var previousEntry = scoreBoardEntries.Where(s => s.Id == currentEntry.Id).FirstOrDefault();
+            if (previousEntry != null)
+            {
+                if (currentEntry.Score > previousEntry.Score && CurrentPlayerEntries.Where(s => s.Status > scoreBoardEntries.Where(x => x.Id == s.Id).FirstOrDefault().Status).Count() == 2)
+                {
+                    await ToggleTurns();
+                }
+            }
+        }
+
+        CurrentPlayer.CurrentTotalScore = scoreBoardEntries.Sum(s => s.Score);
+        await playerService.UpdatePlayer(CurrentPlayer);
+        await GetCurrentGame();
+    }
 }
