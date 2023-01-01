@@ -18,5 +18,6 @@ namespace Pin.CricketDarts.Core.Entities
         public Player Player { get; set; }
         public int Target { get; set; }
         public TargetStatus Status { get; set; }
+        public int Score { get; set; }
     }
 }

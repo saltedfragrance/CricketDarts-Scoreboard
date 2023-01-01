@@ -25,7 +25,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                 PlayerId = scoreBoardEntry.PlayerId,
                 Status = scoreBoardEntry.Status,
                 Target = scoreBoardEntry.Target,
-                CurrentTurnId = scoreBoardEntry.TurnId
+                CurrentTurnId = scoreBoardEntry.TurnId,
+                Score = scoreBoardEntry.Score
             };
 
             await _httpClient.PostAsJsonAsync<ScoreBoardEntryRequestDto>(baseUrl, dto);
@@ -41,7 +42,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                 GameId = s.GameId,
                 PlayerId = s.PlayerId,
                 Status = s.Status,
-                Target = s.Target
+                Target = s.Target,
+                Score = s.Score
             }).ToList();
         }
 
@@ -54,7 +56,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                 Status = scoreBoardEntry.Status,
                 PlayerId = scoreBoardEntry.PlayerId,
                 GameId = scoreBoardEntry.GameId,
-                CurrentTurnId = scoreBoardEntry.TurnId
+                CurrentTurnId = scoreBoardEntry.TurnId,
+                Score = scoreBoardEntry.Score
             };
 
             await _httpClient.PutAsJsonAsync<ScoreBoardEntryRequestDto>($"{baseUrl}", dto);

@@ -79,6 +79,7 @@
             await scoreBoardEntryService.CreateScoreBoardEntry(toAdd);
         }
         await GetCurrentGame();
+        //await CalculateThrows();
     }
 
     private async Task<Turn> CreateNewTurn(Guid playerId)
@@ -110,4 +111,12 @@
         await playerService.UpdatePlayer(playerHasTurn);
         await playerService.UpdatePlayer(playerHasNoTurn);
     }
+
+    //private async Task CalculateThrows()
+    //{
+    //    var scoreBoardEntries = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(s => s.PlayerId == ActiveGame.Players.Where(p => p.HasTurn).FirstOrDefault().Id
+    //                                                                                  && s.TurnId == ActiveGame.CurrentTurnId).ToList();
+    //    if(scoreBoardEntries.All(s => s.Status == 3) || 
+    //       )
+    //}
 }

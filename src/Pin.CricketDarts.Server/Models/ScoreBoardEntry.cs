@@ -9,5 +9,6 @@ namespace Pin.CricketDarts.Server.Models
         public Guid PlayerId { get; set; }
         public int Target { get; set; }
         public int Status { get; set; }
+        public int Score { get; set; }
     }
 }

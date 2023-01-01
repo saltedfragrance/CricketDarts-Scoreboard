@@ -14,5 +14,6 @@ namespace Pin.CricketDarts.Shared
         public Guid? CurrentTurnId { get; set; }
         public int Target { get; set; }
         public int Status { get; set; }
+        public int Score { get; set; }
     }
 }
