@@ -35,7 +35,7 @@ namespace Pin.CricketDarts.Server.Services.Api
                 Id = turn.Id,
                 PlayerId = turn.PlayerId,
                 CurrentAmountOfThrows = turn.CurrentAmountOfThrows,
-                CurrentTotalScore = turn.CurrentTotalScore,
+                CurrentTotalScore = turn.CurrentTotalScore
             };
 
             return _httpClient.PostAsJsonAsync<TurnRequestDto>(baseUrl, dto);

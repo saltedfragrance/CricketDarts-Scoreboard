@@ -106,7 +106,6 @@
         var newTurn = await CreateNewTurn(playerHasTurn.Id);
 
         ActiveGame.CurrentTurnId = newTurn.Id;
-        await turnService.CreateTurn(newTurn);
         await gameService.UpdateGame(ActiveGame);
         await playerService.UpdatePlayer(playerHasTurn);
         await playerService.UpdatePlayer(playerHasNoTurn);
