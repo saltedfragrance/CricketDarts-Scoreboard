@@ -20,83 +20,105 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await GetCurrentGame();
+        await RefreshCurrentGame();
     }
 
-    private async Task GetCurrentGame()
+    private async Task RefreshCurrentGame()
     {
-        //game is zowiezo altijd aanwezig
+        //game refreshen
+        //game is zowiezo altijd aanwezig, anders geen knop op de tournament pagina
         ActiveGame = (await gameService.GetGames()).Where(g => g.Id == SelectedGameId).FirstOrDefault();
         CurrentPlayer = ActiveGame.Players.Where(p => p.HasTurn == true).FirstOrDefault();
 
-        //als het een nieuwe game is, stel de beurt in
+        //als het een nieuwe game is, stel de beurt en turn in
         if (ActiveGame.Players.All(p => !p.HasTurn))
         {
             CurrentPlayer = ActiveGame.Players.ElementAt(0);
             CurrentPlayer.HasTurn = true;
             await playerService.UpdatePlayer(CurrentPlayer);
-        }
-        if (ActiveGame.CurrentTurnId == null)
-        {
+
             var turn = await CreateNewTurn(CurrentPlayer.Id);
             ActiveGame.CurrentTurnId = turn.Id;
             await gameService.UpdateGame(ActiveGame);
         }
     }
+
     private async Task UpdateScoreBoard(int target)
     {
-        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.Target == target
-                                            && s.GameId == ActiveGame.Id
-                                            && s.PlayerId == CurrentPlayer.Id
-                                            && s.TurnId == ActiveGame.CurrentTurnId)
-                                            .FirstOrDefault();
-
-        var previousEntry = ActiveGame.ScoreBoardEntries.Where(s => s.Target == target
+        //vorige entry in vorige turn ophalen, indien aanwezig
+        var previousEntryPreviousTurn = ActiveGame.ScoreBoardEntries.Where(s => s.Target == target
                                                     && s.GameId == ActiveGame.Id
                                                     && s.PlayerId == CurrentPlayer.Id)
                                                     .FirstOrDefault();
 
-        if (entry != null)
+
+        //indien al een throw gedaan in huidige turn, entry ophalen
+        var currentEntry = ActiveGame.ScoreBoardEntries.Where(s => s.Target == target
+                                        && s.GameId == ActiveGame.Id
+                                        && s.PlayerId == CurrentPlayer.Id
+                                        && s.TurnId == ActiveGame.CurrentTurnId)
+                                        .FirstOrDefault();
+
+        //nieuwe entry, zonder score of status
+        var toAdd = new ScoreBoardEntry
         {
-            int previousStatus = entry.Status;
-            var status = entry.Status;
-            var toUpdate = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(s => s.Id == entry.Id).FirstOrDefault();
+            GameId = ActiveGame.Id,
+            Id = Guid.NewGuid(),
+            PlayerId = CurrentPlayer.Id,
+            TurnId = ActiveGame.CurrentTurnId,
+            Target = target
+        };
 
-            if (toUpdate.TurnId == null) toUpdate.TurnId = ActiveGame.CurrentTurnId;
+        //indien er nog geen throw gedaan is naar dat nummer in de huidige ronde, en ook geen in de vorige ronde (geen status, geen punten)
+        if (currentEntry == null && previousEntryPreviousTurn == null)
+        {
+            toAdd.Status = 1;
+            await scoreBoardEntryService.CreateScoreBoardEntry(toAdd);
+        }
+        //indien er nog geen throw gedaan is naar dat nummer in de huidige ronde, maar wel een in de vorige ronde (wel een status, misschien punten)
+        else if (currentEntry == null && previousEntryPreviousTurn != null)
+        {
+            toAdd.Status = CalculateStatus(previousEntryPreviousTurn.Status);
+            toAdd.Score = CalculatePoints(previousEntryPreviousTurn.Score, toAdd.Target, toAdd.Status);
+            await scoreBoardEntryService.CreateScoreBoardEntry(toAdd);
+        }
+        //indien er wel al een throw gedaan is in de huidige ronde (wel al een status, misschien punten)
+        else
+        {
+            currentEntry.Status = CalculateStatus(currentEntry.Status);
+            currentEntry.Score = CalculatePoints(currentEntry.Score, toAdd.Target, currentEntry.Status);
+            await scoreBoardEntryService.UpdateScoreBoardEntry(currentEntry);
+        }
 
-            if (status == 1) toUpdate.Status = 2;
-            else toUpdate.Status = 3;
+        await RefreshCurrentGame();
+        await CalculateThrows();
+    }
 
-            if (toUpdate.Target != 14)
+    private int CalculatePoints(int score, int target, int status)
+    {
+        if (target != 14)
+        {
+            if (score < ((target * 3) * 2) && status == 3)
             {
-                if (toUpdate.Score < ((toUpdate.Target * 3) * 2) && toUpdate.Status == 3 && previousStatus == 3)
-                {
-                    toUpdate.Score += target;
-                }
+                return score += target;
             }
-            else
-            {
-                if (toUpdate.Score < ((25 * 3) * 2) && toUpdate.Status == 3 && previousStatus == 3) toUpdate.Score += 25;
-            }
-
-            await scoreBoardEntryService.UpdateScoreBoardEntry(toUpdate);
+            else return score;
         }
         else
         {
-            var toAdd = new ScoreBoardEntry
-            {
-                GameId = ActiveGame.Id,
-                Id = Guid.NewGuid(),
-                PlayerId = CurrentPlayer.Id,
-                Status = previousEntry == null ? 1 : (previousEntry.Status == 1 ? 2 : 3),
-                TurnId = ActiveGame.CurrentTurnId,
-                Target = target
-            };
-
-            await scoreBoardEntryService.CreateScoreBoardEntry(toAdd);
+            if (score < ((25 * 3) * 2) && status == 3) return score += 25;
+            else return score;
         }
-        await GetCurrentGame();
-        await CalculateThrows();
+    }
+
+    private int CalculateStatus(int status)
+    {
+        int newStatus;
+        if (status == 0) newStatus = 1;
+        else if (status == 1) newStatus = 2;
+        else newStatus = 3;
+
+        return newStatus;
     }
 
     private async Task<Turn> CreateNewTurn(Guid playerId)
@@ -111,21 +133,6 @@
         await turnService.CreateTurn(toAdd);
 
         return toAdd;
-    }
-
-    private async Task ToggleTurns()
-    {
-        var otherPlayer = ActiveGame.Players.Where(p => !p.HasTurn).FirstOrDefault();
-        otherPlayer.HasTurn = true;
-        CurrentPlayer.HasTurn = false;
-
-        var newTurn = await CreateNewTurn(otherPlayer.Id);
-
-        ActiveGame.CurrentTurnId = newTurn.Id;
-        await playerService.UpdatePlayer(otherPlayer);
-        await playerService.UpdatePlayer(CurrentPlayer);
-        await gameService.UpdateGame(ActiveGame);
-        await GetCurrentGame();
     }
 
     private async Task CalculateThrows()
@@ -159,6 +166,21 @@
 
         CurrentPlayer.CurrentTotalScore = scoreBoardEntries.Sum(s => s.Score);
         await playerService.UpdatePlayer(CurrentPlayer);
-        await GetCurrentGame();
+        await RefreshCurrentGame();
+    }
+
+    private async Task ToggleTurns()
+    {
+        var otherPlayer = ActiveGame.Players.Where(p => !p.HasTurn).FirstOrDefault();
+        otherPlayer.HasTurn = true;
+        CurrentPlayer.HasTurn = false;
+
+        var newTurn = await CreateNewTurn(otherPlayer.Id);
+
+        ActiveGame.CurrentTurnId = newTurn.Id;
+        await playerService.UpdatePlayer(otherPlayer);
+        await playerService.UpdatePlayer(CurrentPlayer);
+        await gameService.UpdateGame(ActiveGame);
+        await RefreshCurrentGame();
     }
 }
