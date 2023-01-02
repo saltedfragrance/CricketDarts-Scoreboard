@@ -52,7 +52,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                     Status = s.Status,
                     Target = s.Target,
                     Score = s.Score,
-                    TurnId = s.CurrentTurnId
+                    TurnId = s.CurrentTurnId,
+                    DateAndTime = s.DateAndTime,
                 }).ToList(),
                 WinnerId = p.WinnerId,
                 CurrentTurnId = p.CurrentTurnId,
@@ -71,7 +72,11 @@ namespace Pin.CricketDarts.Server.Services.Api
                     GameId = s.Id,
                     PlayerId = s.PlayerId,
                     Status = s.Status,
-                    Target = s.Target
+                    Target = s.Target,
+                    Score = s.Score,
+                    DateAndTime = s.DateAndTime,
+                    CurrentTurnId = s.TurnId,
+                    Id = game.Id
                 }).ToList(),
                 Players = game.Players.Select(p => new PlayerRequestDto
                 {

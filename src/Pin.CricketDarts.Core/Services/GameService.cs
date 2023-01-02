@@ -58,7 +58,8 @@ namespace Pin.CricketDarts.Core.Services
                     Status = (int)x.Status,
                     Target = x.Target,
                     Score = x.Score,
-                    CurrentTurnId = x.TurnId
+                    CurrentTurnId = x.TurnId,
+                    DateAndTime = x.DateAndTime
                 }),
                 TournamentId = g.TournamentId,
                 CurrentTurnId = g.CurrentTurnId

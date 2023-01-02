@@ -15,5 +15,6 @@ namespace Pin.CricketDarts.Shared
         public int Target { get; set; }
         public int Status { get; set; }
         public int Score { get; set; }
+        public DateTime DateAndTime { get; set; }
     }
 }

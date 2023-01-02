@@ -55,9 +55,9 @@ namespace Pin.CricketDarts.Infrastructure.Data.Seeding
 
             List<ScoreBoardEntry> scoreBoardEntries = new List<ScoreBoardEntry>
             {
-                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 16, Status = TargetStatus.Closed, TurnId = new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59") },
-                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 15, Status = TargetStatus.OnePoint, TurnId = new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59") },
-                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 17, Status = TargetStatus.TwoPoint, TurnId = new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59") }
+                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 16, Status = TargetStatus.Closed, TurnId = new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59"), DateAndTime = DateTime.Now.AddDays(2) },
+                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 15, Status = TargetStatus.OnePoint, TurnId = new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59"), DateAndTime = DateTime.Now },
+                new ScoreBoardEntry{ Id = Guid.NewGuid(), GameId = games[5].Id, PlayerId = players[0].Id, Target = 17, Status = TargetStatus.TwoPoint, TurnId = new Guid("6ba0a3b1-932b-41b3-bc2b-82d720687b59"), DateAndTime = DateTime.Now.AddDays(1) }
             };
 
             modelBuilder.Entity<Tournament>().HasData(tournaments);
