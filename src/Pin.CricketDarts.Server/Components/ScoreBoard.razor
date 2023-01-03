@@ -80,7 +80,7 @@
 
     private string GetSymbol(int target, Guid playerId)
     {
-        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).OrderByDescending(x => x.Status).FirstOrDefault();
+        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).OrderBy(t => Math.Abs((DateTime.Now - t.DateAndTime).Ticks)).FirstOrDefault();
         if (entry != null)
         {
             var targetStatus = entry.Status;
@@ -94,7 +94,7 @@
 
     private int GetScore(int target, Guid playerId)
     {
-        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).OrderByDescending(x => x.Status).FirstOrDefault();
+        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).OrderBy(t => Math.Abs((DateTime.Now - t.DateAndTime).Ticks)).FirstOrDefault();
         if (entry != null)
         {
             return entry.Score;
