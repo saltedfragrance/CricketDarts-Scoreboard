@@ -12,5 +12,6 @@ namespace Pin.CricketDarts.Shared
         public Guid PlayerId { get; set; }
         public int CurrentAmountOfThrows { get; set; }
         public int CurrentTotalScore { get; set; }
+        public bool SelectionMode { get; set; }
     }
 }

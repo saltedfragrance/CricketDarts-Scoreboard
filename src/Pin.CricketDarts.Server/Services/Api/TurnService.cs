@@ -24,7 +24,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                 Id = t.Id,
                 CurrentAmountOfThrows = t.CurrentAmountOfThrows,
                 CurrentTotalScore = t.CurrentTotalScore,
-                PlayerId = t.PlayerId
+                PlayerId = t.PlayerId,
+                SelectionMode = t.SelectionMode
             }).ToList();
         }
 
@@ -35,7 +36,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                 Id = turn.Id,
                 PlayerId = turn.PlayerId,
                 CurrentAmountOfThrows = turn.CurrentAmountOfThrows,
-                CurrentTotalScore = turn.CurrentTotalScore
+                CurrentTotalScore = turn.CurrentTotalScore,
+                SelectionMode = turn.SelectionMode
             };
 
             return _httpClient.PostAsJsonAsync<TurnRequestDto>(baseUrl, dto);
@@ -48,7 +50,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                 Id = turn.Id,
                 CurrentTotalScore = turn.CurrentTotalScore,
                 PlayerId = turn.PlayerId,
-                CurrentAmountOfThrows = turn.CurrentAmountOfThrows
+                CurrentAmountOfThrows = turn.CurrentAmountOfThrows,
+                SelectionMode = turn.SelectionMode
             };
 
             await _httpClient.PutAsJsonAsync<TurnRequestDto>($"{baseUrl}", dto);

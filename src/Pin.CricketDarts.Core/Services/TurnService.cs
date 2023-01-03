@@ -26,7 +26,8 @@ namespace Pin.CricketDarts.Core.Services
                 CurrentAmountOfThrows = turnRequestDto.CurrentAmountOfThrows,
                 PointsScored = turnRequestDto.CurrentTotalScore,
                 Id = turnRequestDto.Id,
-                PlayerId = turnRequestDto.PlayerId
+                PlayerId = turnRequestDto.PlayerId,
+                SelectionMode = turnRequestDto.SelectionMode
             };
             await _turnRepository.AddAsync(turn);
         }
@@ -40,7 +41,8 @@ namespace Pin.CricketDarts.Core.Services
                 Id = t.Id,
                 CurrentAmountOfThrows = t.CurrentAmountOfThrows,
                 CurrentTotalScore = t.PointsScored,
-                PlayerId = t.PlayerId
+                PlayerId = t.PlayerId,
+                SelectionMode = t.SelectionMode
 
             });
         }
@@ -57,7 +59,8 @@ namespace Pin.CricketDarts.Core.Services
                 Id = turnRequestDto.Id,
                 PlayerId = turnRequestDto.PlayerId,
                 PointsScored = turnRequestDto.CurrentTotalScore,
-                CurrentAmountOfThrows = turnRequestDto.CurrentAmountOfThrows
+                CurrentAmountOfThrows = turnRequestDto.CurrentAmountOfThrows,
+                SelectionMode = turnRequestDto.SelectionMode
             };
 
             await _turnRepository.UpdateAsync(turn);

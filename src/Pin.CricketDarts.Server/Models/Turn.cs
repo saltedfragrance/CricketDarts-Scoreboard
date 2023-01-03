@@ -8,5 +8,6 @@ namespace Pin.CricketDarts.Server.Models
         public int CurrentAmountOfThrows { get; set; }
         public int CurrentTotalScore { get; set; }
         public ICollection<ScoreBoardEntry> ScoreBoardEntries { get; set; }
+        public bool SelectionMode { get; set; }
     }
 }

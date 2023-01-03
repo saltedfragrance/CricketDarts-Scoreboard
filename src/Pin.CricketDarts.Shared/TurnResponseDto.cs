@@ -13,5 +13,6 @@ namespace Pin.CricketDarts.Shared
         public int CurrentAmountOfThrows { get; set; }
         public int CurrentTotalScore { get; set; }
         public ICollection<ScoreBoardEntryResponseDto> ScoreBoardEntries { get; set; }
+        public bool SelectionMode { get; set; }
     }
 }
