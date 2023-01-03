@@ -7,20 +7,24 @@
 <PageTitle>Scoreboard</PageTitle>
 <ScoreBoard ActiveGame="ActiveGame"
             UpdateScoreBoard="UpdateScoreBoard"
+            CurrentPlayer="CurrentPlayer"
             ToggleTurns="ToggleTurns"
-            CurrentPlayer="CurrentPlayer"></ScoreBoard>
+            UpdateDoublesTriples="UpdateDoublesTriples"
+            @ref="scoreBoard"
+            CancelSelection="CancelSelectionOfDoublesAndTriples"></ScoreBoard>
 
 @code{
+    private bool SelectionDone { get; set; } = true;
     [Parameter]
     public Guid SelectedGameId { get; set; }
     [Parameter]
     public Game ActiveGame { get; set; } = new();
     [Parameter]
     public Player CurrentPlayer { get; set; }
-    [Parameter]
-    public EventCallback<int> SelectThrows { get; set; }
+
     public Turn CurrentTurn { get; set; }
 
+    public ScoreBoard scoreBoard;
 
     protected override async Task OnInitializedAsync()
     {
@@ -29,23 +33,30 @@
 
     private async Task RefreshCurrentGame()
     {
-        //game refreshen
         //game is zowiezo altijd aanwezig, anders geen knop op de tournament pagina
         ActiveGame = (await gameService.GetGames()).Where(g => g.Id == SelectedGameId).FirstOrDefault();
-        CurrentPlayer = ActiveGame.Players.Where(p => p.HasTurn == true).FirstOrDefault();
 
         //als het een nieuwe game is, stel de beurt en turn in
-        if (ActiveGame.Players.All(p => !p.HasTurn))
+        if (ActiveGame.CurrentTurnId == null)
         {
-            CurrentPlayer = ActiveGame.Players.ElementAt(0);
-            CurrentPlayer.HasTurn = true;
-            await playerService.UpdatePlayer(CurrentPlayer);
+            if (ActiveGame.Players.All(p => !p.HasTurn))
+            {
+                CurrentPlayer = ActiveGame.Players.ElementAt(0);
+                CurrentPlayer.HasTurn = true;
+                await playerService.UpdatePlayer(CurrentPlayer);
 
-            var turn = await CreateNewTurn(CurrentPlayer.Id);
-            ActiveGame.CurrentTurnId = turn.Id;
-            await gameService.UpdateGame(ActiveGame);
+                var turn = await CreateNewTurn(CurrentPlayer.Id);
+                ActiveGame.CurrentTurnId = turn.Id;
+                await gameService.UpdateGame(ActiveGame);
+            }
         }
+
+        //game refreshen
         CurrentTurn = (await turnService.GetTurns()).Where(t => t.Id == ActiveGame.CurrentTurnId).FirstOrDefault();
+        CurrentPlayer = ActiveGame.Players.Where(p => p.Id == CurrentTurn.PlayerId).FirstOrDefault();
+
+        //indien game stopgezet op triple of double selectiescherm, eerst dat doen
+        if (ActiveGame.Players.All(p => p.HasTurn == false) && ActiveGame.CurrentTurnId != null) await CheckForEarlyEnding();
     }
 
     private async Task UpdateScoreBoard(int target)
@@ -163,9 +174,13 @@
         if (CurrentTurn.CurrentAmountOfThrows == 9)
         {
             await UpdateStatistics(3);
-            await ToggleTurns();
+            await ToggleTurns(false);
+            await UpdateScore();
         }
+    }
 
+    private async Task UpdateScore()
+    {
         //totale score updaten
         var scoreBoardEntries = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(s => s.PlayerId == CurrentPlayer.Id && s.GameId == ActiveGame.Id).ToList();
         CurrentPlayer.CurrentTotalScore = scoreBoardEntries.Sum(s => s.Score);
@@ -187,32 +202,80 @@
         }
     }
 
-    private async Task ToggleTurns()
+    private async Task ToggleTurns(bool checkForEarlyEnding)
     {
-        //indien vroegtijdig op knop toggleturns geklikt: check hoeveel doubles en triples gegooid worden
-        await CheckForEarlyEnding();
 
-        //beurt instellen op player
-        var otherPlayer = ActiveGame.Players.Where(p => !p.HasTurn).FirstOrDefault();
-        otherPlayer.HasTurn = true;
-        CurrentPlayer.HasTurn = false;
+        //indien vroegtijdig op knop toggleturns geklikt: check hoeveel doubles en triples gegooid
+        ////CurrentTurn.CurrentAmountOfThrows < 9 && SelectionDone == false && CurrentTurn.CurrentAmountOfThrows > 1
+        if (checkForEarlyEnding == true)
+        {
+            await CheckForEarlyEnding();
+        }
 
-        //nieuwe turn maken
-        var newTurn = await CreateNewTurn(otherPlayer.Id);
-        ActiveGame.CurrentTurnId = newTurn.Id;
+        //beurt instellen op player, indien niet op selectiescherm doubles en triples
+        if (ActiveGame.Players.Any(p => p.HasTurn == false) && SelectionDone == true)
+        {
+            var otherPlayer = ActiveGame.Players.Where(p => !p.HasTurn).FirstOrDefault();
+            otherPlayer.HasTurn = true;
+            CurrentPlayer.HasTurn = false;
 
-        await playerService.UpdatePlayer(otherPlayer);
-        await playerService.UpdatePlayer(CurrentPlayer);
-        await gameService.UpdateGame(ActiveGame);
-        await RefreshCurrentGame();
+            //nieuwe turn maken
+            var newTurn = await CreateNewTurn(otherPlayer.Id);
+            ActiveGame.CurrentTurnId = newTurn.Id;
+
+            await playerService.UpdatePlayer(otherPlayer);
+            await playerService.UpdatePlayer(CurrentPlayer);
+            await gameService.UpdateGame(ActiveGame);
+            await RefreshCurrentGame();
+            SelectionDone = true;
+            scoreBoard.ShowThrowsSelection = false;
+            StateHasChanged();
+        }
     }
 
     private async Task CheckForEarlyEnding()
     {
+        SelectionDone = false;
         var amountOfThrows = CurrentTurn.CurrentAmountOfThrows;
 
-        //kan maar 2 triples en een double zijn
-        if (amountOfThrows == 8) UpdateStatistics(2, 1);
+        //beurt van currentplayer op false zetten, om input te disablen
+        CurrentPlayer.HasTurn = false;
+        await playerService.UpdatePlayer(CurrentPlayer);
 
+        //kan maar 2 triples en een double zijn
+        if (amountOfThrows == 8)
+        {
+            UpdateStatistics(2, 1);
+            return;
+        }
+        //kan maar 2 triples zijn
+        if (amountOfThrows == 7)
+        {
+            UpdateStatistics(2);
+            return;
+        }
+
+        //triples of doubles selecteren
+        await scoreBoard.SelectThrows(amountOfThrows);
+    }
+
+    private async Task UpdateDoublesTriples(Dictionary<string, int> values)
+    {
+        //waarden updaten
+        var triples = values.Where(v => v.Key == "Triples").FirstOrDefault().Value;
+        var doubles = values.Where(v => v.Key == "Doubles").FirstOrDefault().Value;
+
+        if (triples > 0) CurrentPlayer.Triples += triples;
+        if (doubles > 0) CurrentPlayer.Doubles += doubles;
+
+        //beurt togglen
+        SelectionDone = true;
+        await ToggleTurns(false);
+    }
+
+    private async Task CancelSelectionOfDoublesAndTriples()
+    {
+        SelectionDone = true;
+        await ToggleTurns(false);
     }
 }
