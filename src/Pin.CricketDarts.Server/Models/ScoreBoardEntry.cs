@@ -11,5 +11,6 @@ namespace Pin.CricketDarts.Server.Models
         public int Status { get; set; }
         public int Score { get; set; }
         public DateTime DateAndTime { get; set; }
+        public int AmountClicks { get; set; }
     }
 }

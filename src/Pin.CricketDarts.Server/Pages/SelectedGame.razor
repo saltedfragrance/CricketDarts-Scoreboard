@@ -8,7 +8,7 @@
 <ScoreBoard ActiveGame="ActiveGame"
             UpdateScoreBoard="UpdateScoreBoard"
             CurrentPlayer="CurrentPlayer"
-            ToggleTurns="ToggleTurns"
+            ManualToggleTurns="ManualToggleTurns"
             UpdateDoublesTriples="UpdateDoublesTriples"
             @ref="scoreBoard"
             CancelSelection="CancelSelectionOfDoublesAndTriples"></ScoreBoard>
@@ -56,7 +56,10 @@
         CurrentPlayer = ActiveGame.Players.Where(p => p.Id == CurrentTurn.PlayerId).FirstOrDefault();
 
         //indien game stopgezet op triple of double selectiescherm, eerst dat doen
-        if (ActiveGame.Players.All(p => p.HasTurn == false) && ActiveGame.CurrentTurnId != null) await CheckForEarlyEnding();
+        if (CurrentTurn! != null)
+        {
+            if (ActiveGame.Players.All(p => p.HasTurn == false) && ActiveGame.CurrentTurnId != null && CurrentTurn.SelectionMode == true) await CheckForEarlyEnding();
+        }
     }
 
     private async Task UpdateScoreBoard(int target)
@@ -174,7 +177,7 @@
         if (CurrentTurn.CurrentAmountOfThrows == 9)
         {
             await UpdateStatistics(3);
-            await ToggleTurns(false);
+            await AutomaticToggleTurns();
             await UpdateScore();
         }
     }
@@ -202,40 +205,36 @@
         }
     }
 
-    private async Task ToggleTurns(bool checkForEarlyEnding)
+    private async Task AutomaticToggleTurns()
     {
+        var otherPlayer = ActiveGame.Players.Where(p => !p.HasTurn).FirstOrDefault();
+        otherPlayer.HasTurn = true;
+        CurrentPlayer.HasTurn = false;
 
+        //nieuwe turn maken
+        var newTurn = await CreateNewTurn(otherPlayer.Id);
+        ActiveGame.CurrentTurnId = newTurn.Id;
+
+        await playerService.UpdatePlayer(otherPlayer);
+        await playerService.UpdatePlayer(CurrentPlayer);
+        await gameService.UpdateGame(ActiveGame);
+        await RefreshCurrentGame();
+        SelectionDone = true;
+        scoreBoard.ShowThrowsSelection = false;
+        StateHasChanged();
+    }
+
+    private async Task ManualToggleTurns()
+    {
         //indien vroegtijdig op knop toggleturns geklikt: check hoeveel doubles en triples gegooid
-        ////CurrentTurn.CurrentAmountOfThrows < 9 && SelectionDone == false && CurrentTurn.CurrentAmountOfThrows > 1
-        if (checkForEarlyEnding == true)
-        {
-            await CheckForEarlyEnding();
-        }
-
-        //beurt instellen op player, indien niet op selectiescherm doubles en triples
-        if (ActiveGame.Players.Any(p => p.HasTurn == false) && SelectionDone == true)
-        {
-            var otherPlayer = ActiveGame.Players.Where(p => !p.HasTurn).FirstOrDefault();
-            otherPlayer.HasTurn = true;
-            CurrentPlayer.HasTurn = false;
-
-            //nieuwe turn maken
-            var newTurn = await CreateNewTurn(otherPlayer.Id);
-            ActiveGame.CurrentTurnId = newTurn.Id;
-
-            await playerService.UpdatePlayer(otherPlayer);
-            await playerService.UpdatePlayer(CurrentPlayer);
-            await gameService.UpdateGame(ActiveGame);
-            await RefreshCurrentGame();
-            SelectionDone = true;
-            scoreBoard.ShowThrowsSelection = false;
-            StateHasChanged();
-        }
+        CheckForEarlyEnding();
     }
 
     private async Task CheckForEarlyEnding()
     {
         SelectionDone = false;
+        CurrentTurn.SelectionMode = true;
+        await turnService.UpdateTurn(CurrentTurn);
         var amountOfThrows = CurrentTurn.CurrentAmountOfThrows;
 
         //beurt van currentplayer op false zetten, om input te disablen
@@ -246,12 +245,14 @@
         if (amountOfThrows == 8)
         {
             UpdateStatistics(2, 1);
+            AutomaticToggleTurns();
             return;
         }
         //kan maar 2 triples zijn
         if (amountOfThrows == 7)
         {
             UpdateStatistics(2);
+            AutomaticToggleTurns();
             return;
         }
 
@@ -270,12 +271,14 @@
 
         //beurt togglen
         SelectionDone = true;
-        await ToggleTurns(false);
+        await AutomaticToggleTurns();
     }
 
     private async Task CancelSelectionOfDoublesAndTriples()
     {
         SelectionDone = true;
-        await ToggleTurns(false);
+        CurrentTurn.SelectionMode = true;
+        await turnService.UpdateTurn(CurrentTurn);
+        await AutomaticToggleTurns();
     }
 }

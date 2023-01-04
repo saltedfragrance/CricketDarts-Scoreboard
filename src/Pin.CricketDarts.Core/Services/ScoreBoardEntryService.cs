@@ -31,7 +31,8 @@ namespace Pin.CricketDarts.Core.Services
                 Target = scoreBoardEntryRequestDto.Target,
                 TurnId = scoreBoardEntryRequestDto.CurrentTurnId,
                 Score = scoreBoardEntryRequestDto.Score,
-                DateAndTime = scoreBoardEntryRequestDto.DateAndTime
+                DateAndTime = scoreBoardEntryRequestDto.DateAndTime,
+                AmountClicks = scoreBoardEntryRequestDto.AmountClicks,
             };
             await _scoreBoardEntryRepository.AddAsync(scoreBoardEntry);
         }
@@ -49,7 +50,8 @@ namespace Pin.CricketDarts.Core.Services
                 Target = x.Target,
                 Score = x.Score,
                 CurrentTurnId = x.TurnId,
-                DateAndTime = x.DateAndTime
+                DateAndTime = x.DateAndTime,
+                AmountClicks = x.AmountClicks,
             }).ToList();
 
             return dtos;
@@ -71,7 +73,8 @@ namespace Pin.CricketDarts.Core.Services
                 Target = scoreBoardEntryRequestDto.Target,
                 TurnId = scoreBoardEntryRequestDto.CurrentTurnId,
                 Score = scoreBoardEntryRequestDto.Score,
-                DateAndTime = scoreBoardEntryRequestDto.DateAndTime
+                DateAndTime = scoreBoardEntryRequestDto.DateAndTime,
+                AmountClicks = scoreBoardEntryRequestDto.AmountClicks
             };
 
             await _scoreBoardEntryRepository.UpdateAsync(scoreBoardEntry);

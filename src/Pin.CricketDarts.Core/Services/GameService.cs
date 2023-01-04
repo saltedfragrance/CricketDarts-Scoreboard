@@ -59,7 +59,8 @@ namespace Pin.CricketDarts.Core.Services
                     Target = x.Target,
                     Score = x.Score,
                     CurrentTurnId = x.TurnId,
-                    DateAndTime = x.DateAndTime
+                    DateAndTime = x.DateAndTime,
+                    AmountClicks = x.AmountClicks,
                 }),
                 TournamentId = g.TournamentId,
                 CurrentTurnId = g.CurrentTurnId

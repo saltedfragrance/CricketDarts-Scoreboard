@@ -54,6 +54,7 @@ namespace Pin.CricketDarts.Server.Services.Api
                     Score = s.Score,
                     TurnId = s.CurrentTurnId,
                     DateAndTime = s.DateAndTime,
+                    AmountClicks = s.AmountClicks,
                 }).ToList(),
                 WinnerId = p.WinnerId,
                 CurrentTurnId = p.CurrentTurnId,
@@ -76,7 +77,8 @@ namespace Pin.CricketDarts.Server.Services.Api
                     Score = s.Score,
                     DateAndTime = s.DateAndTime,
                     CurrentTurnId = s.TurnId,
-                    Id = game.Id
+                    Id = game.Id,
+                    AmountClicks = s.AmountClicks
                 }).ToList(),
                 Players = game.Players.Select(p => new PlayerRequestDto
                 {

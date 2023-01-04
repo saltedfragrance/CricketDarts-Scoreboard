@@ -75,7 +75,7 @@
             </div>
             <div hidden="@(!ActiveGame.IsActive)">
                 <div>Current turn: @CurrentPlayer.Name</div>
-                <div><button class="btn btn-light" @onclick="e => ToggleTurns.InvokeAsync(true)">New turn</button></div>
+                <div><button class="btn btn-light" @onclick="e => ManualToggleTurns.InvokeAsync(true)">New turn</button></div>
             </div>
             <div hidden="@ActiveGame.IsActive">
                 <div>The game has ended!</div>
@@ -103,7 +103,7 @@
     [Parameter]
     public EventCallback<Dictionary<string, int>> UpdateDoublesTriples { get; set; }
     [Parameter]
-    public EventCallback<bool> ToggleTurns { get; set; }
+    public EventCallback<bool> ManualToggleTurns { get; set; }
     [Parameter]
     public EventCallback CancelSelection { get; set; }
     [Parameter]
@@ -155,6 +155,9 @@
         AmountOfDoubles = 0;
         AmountOfThrows = amountOfThrows;
         ShowThrowsSelection = true;
+
+        var currentThrows = ActiveGame.ScoreBoardEntries.Where(s => s.TurnId == ActiveGame.CurrentTurnId).ToList();
+
 
         if (ActiveGame.ScoreBoardEntries.Where(s => s.TurnId == ActiveGame.CurrentTurnId).GroupBy(x => x.Target).Any(c => c.Count() == 2)) {
             AmountOfDoubles = (amountOfThrows / 2);

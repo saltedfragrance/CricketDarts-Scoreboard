@@ -20,5 +20,6 @@ namespace Pin.CricketDarts.Core.Entities
         public TargetStatus Status { get; set; }
         public int Score { get; set; }
         public DateTime DateAndTime { get; set; }
+        public int AmountClicks { get; set; }
     }
 }
