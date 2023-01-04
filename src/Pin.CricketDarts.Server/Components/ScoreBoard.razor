@@ -55,14 +55,14 @@
                 <div class="col"></div>
                 <div class="col">Current score: @playerTwo.CurrentTotalScore</div>
             </div>
-            <div class="row" hidden="@(!ShowThrowsSelection)">
+            <div class="row" hidden="@(!CurrentTurn.SelectionMode)">
                 <div class="col">How many triples and doubles did the player throw?</div>
                 <div class="col">
-                    @if (AmountOfTriples != 0 && AmountOfThrows != 5)
+                    @if (AmountOfTriples != 0 && AmountOfThrows != 5 && AmountOfThrows != 4)
                     {
                         <button @onclick="e=> FillValues(AmountOfTriples)">@AmountOfTriples Triple(s)</button>
                     }
-                    @if (AmountOfDoubles != 0 && AmountOfThrows != 5)
+                    @if (AmountOfDoubles != 0 && AmountOfThrows != 5 && AmountOfThrows != 4)
                     {
                         <button @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles Double(s)</button>
                     }
@@ -71,11 +71,16 @@
                         <button @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles doubles</button>
                         <button @onclick="e=> FillValues(AmountOfTriples, 1)">@AmountOfTriples triple and 1 double</button>
                     }
+                    @if (AmountOfThrows == 4)
+                    {
+                        <button @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles doubles</button>
+                        <button @onclick="e=> FillValues(AmountOfTriples, 1)">1 double</button>
+                    }
                 </div>
             </div>
             <div hidden="@(!ActiveGame.IsActive)">
                 <div>Current turn: @CurrentPlayer.Name</div>
-                <div><button class="btn btn-light" @onclick="e => ManualToggleTurns.InvokeAsync(true)">New turn</button></div>
+                <div><button disabled="@CurrentTurn.SelectionMode" class="btn btn-light" @onclick="e => ManualToggleTurns.InvokeAsync(true)">New turn</button></div>
             </div>
             <div hidden="@ActiveGame.IsActive">
                 <div>The game has ended!</div>
@@ -87,15 +92,12 @@
 
 
 @code {
-    [Parameter]
-    public bool ShowThrowsSelection { get; set; } = false;
     public int AmountOfTriples { get; set; }
     public int AmountOfDoubles { get; set; }
     public int AmountOfThrows { get; set; }
-    public int FinalSelection { get; set; }
 
-    public Dictionary<string, int> TripleDoubleValues { get; set; } = new();
-
+    [Parameter]
+    public Turn CurrentTurn { get; set; }
     [Parameter]
     public Game ActiveGame { get; set; }
     [Parameter]
@@ -154,18 +156,23 @@
         AmountOfTriples = 0;
         AmountOfDoubles = 0;
         AmountOfThrows = amountOfThrows;
-        ShowThrowsSelection = true;
 
-        var currentThrows = ActiveGame.ScoreBoardEntries.Where(s => s.TurnId == ActiveGame.CurrentTurnId).ToList();
-
-
-        if (ActiveGame.ScoreBoardEntries.Where(s => s.TurnId == ActiveGame.CurrentTurnId).GroupBy(x => x.Target).Any(c => c.Count() == 2)) {
-            AmountOfDoubles = (amountOfThrows / 2);
-        }
-        if (ActiveGame.ScoreBoardEntries.Where(s => s.TurnId == ActiveGame.CurrentTurnId).GroupBy(x => x.Target).Any(c => c.Count() == 3))
+        foreach (var target in ActiveGame.ScoreBoardEntries.Where(s => s.TurnId == ActiveGame.CurrentTurnId).ToList())
         {
-            AmountOfTriples = (amountOfThrows / 3);
+            if (target.AmountClicks == 2) AmountOfDoubles++;
+            if (target.AmountClicks == 3) AmountOfTriples++;
+            if (target.AmountClicks == 4 || target.AmountClicks == 5)
+            {
+                AmountOfDoubles += 2;
+                AmountOfTriples += 1;
+            }
+            if (target.AmountClicks == 6)
+            {
+                AmountOfDoubles += 3;
+                AmountOfTriples += 2;
+            }
         }
+
         if (AmountOfDoubles == 0 && AmountOfTriples == 0) await CancelSelection.InvokeAsync();
 
         await InvokeAsync(StateHasChanged);

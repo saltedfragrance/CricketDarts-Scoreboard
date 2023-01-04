@@ -11,17 +11,17 @@
             ManualToggleTurns="ManualToggleTurns"
             UpdateDoublesTriples="UpdateDoublesTriples"
             @ref="scoreBoard"
+            CurrentTurn="CurrentTurn"
             CancelSelection="CancelSelectionOfDoublesAndTriples"></ScoreBoard>
 
 @code{
-    private bool SelectionDone { get; set; } = true;
     [Parameter]
     public Guid SelectedGameId { get; set; }
     [Parameter]
     public Game ActiveGame { get; set; } = new();
     [Parameter]
     public Player CurrentPlayer { get; set; }
-
+    [Parameter]
     public Turn CurrentTurn { get; set; }
 
     public ScoreBoard scoreBoard;
@@ -94,7 +94,8 @@
             PlayerId = CurrentPlayer.Id,
             TurnId = ActiveGame.CurrentTurnId,
             Target = target,
-            DateAndTime = DateTime.Now
+            DateAndTime = DateTime.Now,
+            AmountClicks = 1
         };
 
         //checken indien er een 4de target aangeworpen wordt
@@ -123,6 +124,7 @@
             var previousEntryStatus = previousEntryOfCurrentTurn.Status;
             currentEntry.Status = CalculateStatus(currentEntry.Status);
             currentEntry.Score = CalculatePoints(currentEntry.Score, toAdd.Target, currentEntry.Status, previousEntryStatus);
+            currentEntry.AmountClicks += 1;
             await scoreBoardEntryService.UpdateScoreBoardEntry(currentEntry);
         }
 
@@ -130,6 +132,7 @@
         CurrentTurn.CurrentAmountOfThrows++;
         await turnService.UpdateTurn(CurrentTurn);
         await CheckForDefinitiveEnding();
+        await UpdateScore();
         await RefreshCurrentGame();
     }
 
@@ -137,7 +140,7 @@
     {
         if (target != 14)
         {
-            if (score < ((target * 3) * 3) && status == 3 && previousStatus == 3)
+            if (status == 3 && previousStatus == 3)
             {
                 return score += target;
             }
@@ -207,7 +210,16 @@
 
     private async Task AutomaticToggleTurns()
     {
-        var otherPlayer = ActiveGame.Players.Where(p => !p.HasTurn).FirstOrDefault();
+        Player otherPlayer = null;
+        if (ActiveGame.Players.Any(p => p.HasTurn == true))
+        {
+            otherPlayer = ActiveGame.Players.Where(p => !p.HasTurn).FirstOrDefault();
+        }
+        else
+        {
+            otherPlayer = ActiveGame.Players.Where(p => p.Id != CurrentTurn.PlayerId).FirstOrDefault();
+        }
+
         otherPlayer.HasTurn = true;
         CurrentPlayer.HasTurn = false;
 
@@ -219,8 +231,7 @@
         await playerService.UpdatePlayer(CurrentPlayer);
         await gameService.UpdateGame(ActiveGame);
         await RefreshCurrentGame();
-        SelectionDone = true;
-        scoreBoard.ShowThrowsSelection = false;
+        await UpdateScore();
         StateHasChanged();
     }
 
@@ -232,14 +243,9 @@
 
     private async Task CheckForEarlyEnding()
     {
-        SelectionDone = false;
         CurrentTurn.SelectionMode = true;
         await turnService.UpdateTurn(CurrentTurn);
         var amountOfThrows = CurrentTurn.CurrentAmountOfThrows;
-
-        //beurt van currentplayer op false zetten, om input te disablen
-        CurrentPlayer.HasTurn = false;
-        await playerService.UpdatePlayer(CurrentPlayer);
 
         //kan maar 2 triples en een double zijn
         if (amountOfThrows == 8)
@@ -255,6 +261,16 @@
             AutomaticToggleTurns();
             return;
         }
+        if (amountOfThrows == 0)
+        {
+            CurrentTurn.SelectionMode = false;
+            AutomaticToggleTurns();
+            return;
+        }
+
+        //beurt van currentplayer op false zetten, om input te disablen
+        CurrentPlayer.HasTurn = false;
+        await playerService.UpdatePlayer(CurrentPlayer);
 
         //triples of doubles selecteren
         await scoreBoard.SelectThrows(amountOfThrows);
@@ -270,13 +286,12 @@
         if (doubles > 0) CurrentPlayer.Doubles += doubles;
 
         //beurt togglen
-        SelectionDone = true;
+        CurrentTurn.SelectionMode = false;
         await AutomaticToggleTurns();
     }
 
     private async Task CancelSelectionOfDoublesAndTriples()
     {
-        SelectionDone = true;
         CurrentTurn.SelectionMode = true;
         await turnService.UpdateTurn(CurrentTurn);
         await AutomaticToggleTurns();
