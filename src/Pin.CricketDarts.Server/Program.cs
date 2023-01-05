@@ -14,6 +14,7 @@ namespace Pin.CricketDarts.Server
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
+            builder.Services.AddSignalR();
             builder.Services.AddTransient<IPlayerService, PlayerService>();
             builder.Services.AddTransient<IGameService, GameService>();
             builder.Services.AddTransient<IScoreBoardEntryService, ScoreBoardEntryService>();
