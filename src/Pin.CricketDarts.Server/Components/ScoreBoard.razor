@@ -26,7 +26,7 @@
                         @GetScore(i, playerOne.Id)
                     </div>
                     <div class="col border">
-                        <button disabled="@DisableInput(playerOne.Id)" class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(targetPlayerOne)">
+                        <button disabled="@DisableInput(playerOne.Id, targetPlayerOne)" class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(targetPlayerOne)">
                             @GetSymbol(i, playerOne.Id)
                         </button>
                     </div>
@@ -41,7 +41,7 @@
                         }
                     </div>
                     <div class="col border">
-                        <button disabled="@DisableInput(playerTwo.Id)" class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(targetPlayerTwo)">
+                        <button disabled="@DisableInput(playerTwo.Id, targetPlayerTwo)" class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(targetPlayerTwo)">
                             @GetSymbol(j, playerTwo.Id)
                         </button>
                     </div>
@@ -83,8 +83,11 @@
                 <div><button disabled="@CurrentTurn.SelectionMode" class="btn btn-light" @onclick="e => ManualToggleTurns.InvokeAsync(true)">New turn</button></div>
             </div>
             <div hidden="@ActiveGame.IsActive">
-                <div>The game has ended!</div>
-                <div>The winner is: </div>
+                @if (Winner != null)
+                {
+                    <div>The game has ended!</div>
+                    <div>The winner is: @Winner.Name</div>
+                }
             </div>
         </div>
     </div>
@@ -110,6 +113,8 @@
     public EventCallback CancelSelection { get; set; }
     [Parameter]
     public Player CurrentPlayer { get; set; }
+    [Parameter]
+    public Player Winner { get; set; }
 
     private void FillValues(int triples = 0, int doubles = 0)
     {
@@ -143,8 +148,19 @@
         else return 0;
     }
 
-    private bool DisableInput(Guid playerId)
+    private bool DisableInput(Guid playerId, int target)
     {
+        ////input disablen indien alletwee de spelers hem dichtgesmeten heeft
+        //if (ActiveGame.ScoreBoardEntries.Count != 0)
+        //{
+        //    var playerOneEntry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target).FirstOrDefault();
+        //    var playerTwoEntry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId != playerId && s.Target == target).FirstOrDefault();
+        //    if (playerOneEntry != null && playerTwoEntry != null)
+        //    {
+        //        if (playerOneEntry.Status == 3 && playerTwoEntry.Status == 3) return true;
+        //    }
+        //}
+
         var player = ActiveGame.Players.Where(p => p.Id == playerId).FirstOrDefault();
         if (!ActiveGame.IsActive) return true;
         if (player.HasTurn == true) return false;

@@ -12,7 +12,8 @@
             UpdateDoublesTriples="UpdateDoublesTriples"
             @ref="scoreBoard"
             CurrentTurn="CurrentTurn"
-            CancelSelection="CancelSelectionOfDoublesAndTriples"></ScoreBoard>
+            CancelSelection="CancelSelectionOfDoublesAndTriples"
+            Winner="Winner"></ScoreBoard>
 
 @code{
     [Parameter]
@@ -23,6 +24,8 @@
     public Player CurrentPlayer { get; set; }
     [Parameter]
     public Turn CurrentTurn { get; set; }
+    [Parameter]
+    public Player Winner { get; set; }
 
     public ScoreBoard scoreBoard;
 
@@ -103,6 +106,41 @@
         {
             return;
         }
+        //checken indien er meerdere targets geworpen zijn, het aantal worpen nog logisch is
+        if (currentEntry != null)
+        {
+            if (CurrentPlayerEntries.Count == 2 && currentEntry.AmountClicks == 6)
+            {
+                return;
+            }
+            if (CurrentPlayerEntries.Count == 3 && currentEntry.AmountClicks == 3)
+            {
+                return;
+            }
+        }
+        //checken indien er targets zijn met amountclicks > 3 => dan is er 1 target minder mogelijk aan te klikken
+        if (CurrentPlayerEntries.Count() != 0)
+        {
+            if (CurrentPlayerEntries.Any(e => e.AmountClicks > 3) && CurrentPlayerEntries.Count == 2)
+            {
+                if (currentEntry == null) return;
+            }
+            if (CurrentPlayerEntries.Any(e => e.AmountClicks > 6) && CurrentPlayerEntries.Count == 1)
+            {
+                if (currentEntry == null) return;
+            }
+        }
+        //checken indien de huidige worp de target zal volsmijten, en indien de opponent zijn target ook volgesmeten is, de worp niet mogelijk maken
+        if (currentEntry != null)
+        {
+            var targetsFull = CheckForFullTargets(currentEntry);
+            if (targetsFull) return;
+        }
+        if (toAdd != null && previousEntryOfPreviousTurn != null)
+        {
+            var targetsFull = CheckForFullTargets(previousEntryOfPreviousTurn);
+            if (targetsFull) return;
+        }
 
         //indien er nog geen throw gedaan is naar dat nummer in de huidige ronde, en ook geen in de vorige ronde (geen status, geen punten)
         if (currentEntry == null && previousEntryOfPreviousTurn == null)
@@ -133,7 +171,21 @@
         await turnService.UpdateTurn(CurrentTurn);
         await CheckForDefinitiveEnding();
         await UpdateScore();
+        await CheckForWinner();
         await RefreshCurrentGame();
+    }
+
+    private bool CheckForFullTargets(ScoreBoardEntry entry)
+    {
+        var entryOfOpponent = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId != CurrentPlayer.Id).Where(s => s.Target == entry.Target).FirstOrDefault();
+        if (entryOfOpponent != null)
+        {
+            if ((entry.Status + 1 == 4) && entryOfOpponent.Status == 3)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private int CalculatePoints(int score, int target, int status, int previousStatus)
@@ -160,7 +212,8 @@
         else return 3;
     }
 
-    private async Task<Turn> CreateNewTurn(Guid playerId)
+    private async Task<Turn>
+    CreateNewTurn(Guid playerId)
     {
         var toAdd = new Turn
         {
@@ -182,6 +235,31 @@
             await UpdateStatistics(3);
             await AutomaticToggleTurns();
             await UpdateScore();
+        }
+    }
+
+    private async Task CheckForWinner()
+    {
+        //checken op winnaar
+        Player winner = null;
+        int countOfTargets;
+        foreach (var player in ActiveGame.Players)
+        {
+            var otherPlayer = ActiveGame.Players.Where(p => p.Id != player.Id).FirstOrDefault();
+            countOfTargets = 0;
+            var entries = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(e => e.PlayerId == player.Id && e.GameId == ActiveGame.Id).Where(y => y.Status == 3)
+                                                                               .Select(x => new { x.Target, x.Status }).Distinct().ToList();
+
+            if (entries.Count() == 7 && entries.All(x => x.Status == 3) && player.CurrentTotalScore > otherPlayer.CurrentTotalScore)
+            {
+                ActiveGame.WinnerId = player.Id;
+                ActiveGame.IsActive = false;
+                Winner = player;
+                await playerService.UpdatePlayer(player);
+                await gameService.UpdateGame(ActiveGame);
+                StateHasChanged();
+                return;
+            }
         }
     }
 
@@ -276,7 +354,8 @@
         await scoreBoard.SelectThrows(amountOfThrows);
     }
 
-    private async Task UpdateDoublesTriples(Dictionary<string, int> values)
+    private async Task UpdateDoublesTriples(Dictionary<string, int>
+        values)
     {
         //waarden updaten
         var triples = values.Where(v => v.Key == "Triples").FirstOrDefault().Value;
