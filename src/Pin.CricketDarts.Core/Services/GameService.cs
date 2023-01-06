@@ -63,7 +63,8 @@ namespace Pin.CricketDarts.Core.Services
                     AmountClicks = x.AmountClicks,
                 }),
                 TournamentId = g.TournamentId,
-                CurrentTurnId = g.CurrentTurnId
+                CurrentTurnId = g.CurrentTurnId,
+                WinnerId = g.WinnerId
             }).ToList();
         }
 

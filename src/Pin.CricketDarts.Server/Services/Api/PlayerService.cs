@@ -36,6 +36,10 @@ namespace Pin.CricketDarts.Server.Services.Api
                 Name = p.Name,
                 Id = p.Id,
                 HasTurn = p.HasTurn,
+                CurrentAmountOfThrows = p.CurrentAmountOfThrows,
+                CurrentTotalScore = p.CurrentTotalScore,
+                Doubles = p.Doubles,
+                Triples = p.Triples,
             }).ToList();
         }
         public async Task UpdatePlayer(Player player)

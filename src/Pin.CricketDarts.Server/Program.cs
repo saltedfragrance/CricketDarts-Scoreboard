@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Pin.CricketDarts.Infrastructure.Hubs;
+using Pin.CricketDarts.Server.Services;
 using Pin.CricketDarts.Server.Services.Api;
 using Pin.CricketDarts.Server.Services.Interfaces;
 
@@ -19,6 +21,7 @@ namespace Pin.CricketDarts.Server
             builder.Services.AddTransient<IGameService, GameService>();
             builder.Services.AddTransient<IScoreBoardEntryService, ScoreBoardEntryService>();
             builder.Services.AddTransient<ITurnService, TurnService>();
+            builder.Services.AddTransient<IStatisticsService, StatisticsService>();
             builder.Services.AddScoped<HttpClient>();
 
             var app = builder.Build();
@@ -38,6 +41,7 @@ namespace Pin.CricketDarts.Server
             app.UseRouting();
 
             app.MapBlazorHub();
+            app.MapHub<GamesStatisticsHub>("/statisticshub");
             app.MapFallbackToPage("/_Host");
 
             app.Run();

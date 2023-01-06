@@ -37,6 +37,9 @@ namespace Pin.CricketDarts.Core.Services
                 Id = r.Id,
                 Name = r.Name,
                 HasTurn = r.HasTurn,
+                Triples = r.Triples,
+                Doubles = r.Doubles,
+                CurrentTotalScore = r.TotalPointsScored
             }).ToList();
 
             return dtos;

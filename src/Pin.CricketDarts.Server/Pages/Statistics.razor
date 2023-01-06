@@ -1,5 +1,115 @@
-﻿<h3>Statistics</h3>
+﻿@page "/statistics"
+@inject NavigationManager navigationManager;
+@inject IStatisticsService statisticsService;
+
+@if (OngoingGames != null)
+{
+    <div class="mb-5"><h2><b><u>Current Ongoing Games</u></b></h2></div>
+    <div class="row row-cols-0 row-cols-md-2 d-flex justify-content-center mb-4">
+        <div class="container">
+            @foreach (var game in OngoingGames.CurrentOngoingGames)
+            {
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col">@game.Players[0].Name</div>
+                        <div class="col">vs</div>
+                        <div class="col">@game.Players[1].Name</div>
+                    </div>
+                    <div class="row">
+                        <div class="col">Current score: <b>@game.Players[0].CurrentScore</b></div>
+                        <div class="col"></div>
+                        <div class="col">Current score: <b>@game.Players[1].CurrentScore</b></div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+@if (Players != null)
+{
+    <div class="mb-4"><h2><b><u>Statistics</u></b></h2></div>
+    <div class="mb-4"><h4>Most won games</h4></div>
+    <div class="row row-cols-0 row-cols-md-2 d-flex justify-content-center">
+        <div class="container">
+            @for (int i = 0; i < Players.Count; i++)
+            {
+                @if (Players[i].AmountWonGames != 0)
+                {
+                    <div class="mb-1">
+                        <div class="row">
+                            <div class="col">@(i + 1). @Players[i].Name: <b>@Players[i].AmountWonGames</b></div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="mb-4"><h4>Most triples</h4></div>
+    <div class="row row-cols-0 row-cols-md-2 d-flex justify-content-center">
+        <div class="container">
+            @foreach (var player in Players.OrderByDescending(p => p.TotalTriples))
+            {
+                int i = 0;
+                @if (player.TotalTriples != 0)
+                {
+                    <div class="mb-1">
+                        <div class="row">
+                            <div class="col">@(i + 1). @player.Name: <b>@player.TotalTriples</b></div>
+                        </div>
+                    </div>
+                }
+                i++;
+            }
+        </div>
+    </div>
+
+    <div class="mb-4"><h4>Most doubles</h4></div>
+    <div class="row row-cols-0 row-cols-md-2 d-flex justify-content-center">
+        <div class="container">
+            @foreach (var player in Players.OrderByDescending(p => p.TotalDoubles))
+            {
+                int i = 0;
+                @if (player.TotalTriples != 0)
+                {
+                    <div class="mb-1">
+                        <div class="row">
+                            <div class="col">@(i + 1). @player.Name: <b>@player.TotalDoubles</b></div>
+                        </div>
+                    </div>
+                }
+                i++;
+            }
+        </div>
+    </div>
+}
+
 
 @code {
+    private HubConnection hubConnection;
+    public OngoingGames OngoingGames { get; set; }
+    public List<DartsPlayer> Players { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(navigationManager.ToAbsoluteUri("/statisticshub"))
+            .Build();
+
+        await hubConnection.StartAsync();
+
+        await statisticsService.SendStatistics();
+
+        hubConnection.On<OngoingGames>("ReceiveOngoingGames", (ongoingGames) =>
+        {
+            OngoingGames = ongoingGames;
+            StateHasChanged();
+        });
+
+        hubConnection.On<List<DartsPlayer>>("ReceiveAllPlayers", (players) =>
+        {
+            Players = players;
+            StateHasChanged();
+        });
+    }
 }

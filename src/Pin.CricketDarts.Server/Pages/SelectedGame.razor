@@ -3,6 +3,8 @@
 @inject IScoreBoardEntryService scoreBoardEntryService;
 @inject IPlayerService playerService;
 @inject ITurnService turnService;
+@inject IStatisticsService statisticsService;
+@inject NavigationManager navigationManager;
 
 <PageTitle>Scoreboard</PageTitle>
 <ScoreBoard ActiveGame="ActiveGame"
@@ -28,6 +30,8 @@
     public Player Winner { get; set; }
 
     public ScoreBoard scoreBoard;
+
+    private HubConnection hubConnection;
 
     protected override async Task OnInitializedAsync()
     {
@@ -63,6 +67,8 @@
         {
             if (ActiveGame.Players.All(p => p.HasTurn == false) && ActiveGame.CurrentTurnId != null && CurrentTurn.SelectionMode == true) await CheckForEarlyEnding();
         }
+
+        await statisticsService.SendStatistics();
     }
 
     private async Task UpdateScoreBoard(int target)
@@ -177,7 +183,7 @@
 
     private bool CheckForFullTargets(ScoreBoardEntry entry)
     {
-        var entryOfOpponent = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId != CurrentPlayer.Id).Where(s => s.Target == entry.Target).FirstOrDefault();
+        var entryOfOpponent = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId != CurrentPlayer.Id).Where(s => s.Target == entry.Target).OrderBy(t => Math.Abs((DateTime.Now - t.DateAndTime).Ticks)).FirstOrDefault();
         if (entryOfOpponent != null)
         {
             if ((entry.Status + 1 == 4) && entryOfOpponent.Status == 3)

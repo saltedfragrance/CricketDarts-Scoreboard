@@ -150,17 +150,6 @@
 
     private bool DisableInput(Guid playerId, int target)
     {
-        ////input disablen indien alletwee de spelers hem dichtgesmeten heeft
-        //if (ActiveGame.ScoreBoardEntries.Count != 0)
-        //{
-        //    var playerOneEntry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target).FirstOrDefault();
-        //    var playerTwoEntry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId != playerId && s.Target == target).FirstOrDefault();
-        //    if (playerOneEntry != null && playerTwoEntry != null)
-        //    {
-        //        if (playerOneEntry.Status == 3 && playerTwoEntry.Status == 3) return true;
-        //    }
-        //}
-
         var player = ActiveGame.Players.Where(p => p.Id == playerId).FirstOrDefault();
         if (!ActiveGame.IsActive) return true;
         if (player.HasTurn == true) return false;
