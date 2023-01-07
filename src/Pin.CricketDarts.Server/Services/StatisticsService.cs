@@ -76,8 +76,6 @@ namespace Pin.CricketDarts.Server.Services
             return allPlayers.OrderByDescending(p => p.AmountWonGames).ToList();
         }
 
-
-
         public async Task SendStatistics()
         {
             var ongoingGames = await GetCurrentGames();
