@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pin.CricketDarts.Core.Entities
 {
-    public class PlayerGames
+    public class PlayerGame
     {
         public Guid PlayerId { get; set; }
         public Player Player { get; set; }

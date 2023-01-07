@@ -12,7 +12,7 @@ namespace Pin.CricketDarts.Shared
     {
         public bool IsActive { get; set; } = false;
         public IEnumerable<PlayerResponseDto> Players { get; set; }
-        public Guid WinnerId { get; set; }
+        public Guid? WinnerId { get; set; }
         public IEnumerable<ScoreBoardEntryResponseDto> ScoreBoardEntries { get; set; }
         public Guid? CurrentTurnId { get; set; }
         public Guid TournamentId { get; set; }

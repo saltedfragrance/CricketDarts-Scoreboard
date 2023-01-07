@@ -23,8 +23,8 @@ namespace Pin.CricketDarts.Core.Services
         {
             var toAdd = new Tournament
             {
-                Id = gameRequestDto.Id,
-                IsOngoing = gameRequestDto.IsOngoing,
+                Id = tournamentRequestDto.Id,
+                IsOngoing = tournamentRequestDto.IsOngoing,
             };
 
             await _tournamentRepository.AddAsync(toAdd);
@@ -38,6 +38,24 @@ namespace Pin.CricketDarts.Core.Services
             {
                 Id = t.Id,
                 IsOngoing = t.IsOngoing,
+                Games = t.Games.Select(g => new GameResponseDto
+                {
+                    Id = t.Id,
+                    IsActive = g.IsActive,
+                    TournamentId = g.TournamentId,
+                    WinnerId = g.WinnerId,
+                    CurrentTurnId = g.CurrentTurnId
+                }).ToList(),
+                Participants = t.Participants.Select(p => new PlayerResponseDto
+                {
+                    Id = p.Id,
+                    CurrentTotalScore = p.TotalPointsScored,
+                    Doubles = p.Doubles,
+                    HasTurn = p.HasTurn,
+                    Name = p.Name,
+                    Triples = p.Triples,
+                    TournamentId = p.TournamentId
+                }).ToList()
             }).ToList();
         }
 

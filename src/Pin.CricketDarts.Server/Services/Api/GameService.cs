@@ -21,7 +21,12 @@ namespace Pin.CricketDarts.Server.Services.Api
             {
                 Id = game.Id,
                 IsActive = game.IsActive,
-                CurrentTurnId = game.CurrentTurnId
+                TournamentId = game.TournamentId,
+                Players = game.Players.Select(p => new PlayerRequestDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                }),
             };
             return _httpClient.PostAsJsonAsync<GameRequestDto>(baseUrl, dto);
         }
@@ -43,6 +48,7 @@ namespace Pin.CricketDarts.Server.Services.Api
                     CurrentTotalScore = c.CurrentTotalScore,
                     Doubles = c.Doubles,
                     Triples = c.Triples,
+                    CurrentTournamentId = c.TournamentId
                 }).ToList(),
                 ScoreBoardEntries = p.ScoreBoardEntries.Select(s => new ScoreBoardEntry
                 {
@@ -68,25 +74,16 @@ namespace Pin.CricketDarts.Server.Services.Api
             {
                 Id = game.Id,
                 IsActive = game.IsActive,
-                ScoreBoardEntries = game.ScoreBoardEntries.Select(s => new ScoreBoardEntryRequestDto
-                {
-                    GameId = s.Id,
-                    PlayerId = s.PlayerId,
-                    Status = s.Status,
-                    Target = s.Target,
-                    Score = s.Score,
-                    DateAndTime = s.DateAndTime,
-                    CurrentTurnId = s.TurnId,
-                    Id = game.Id,
-                    AmountClicks = s.AmountClicks
-                }).ToList(),
                 Players = game.Players.Select(p => new PlayerRequestDto
                 {
-                    Name = p.Name,
-                    CurrentAmountOfThrows = p.CurrentAmountOfThrows,
+                    Id = p.Id,
                     CurrentTotalScore = p.CurrentTotalScore,
                     Doubles = p.Doubles,
-                    HasTurn = p.HasTurn
+                    HasTurn = p.HasTurn,
+                    Name = p.Name,
+                    CurrentAmountOfThrows = p.CurrentAmountOfThrows,
+                    TournamentId = p.CurrentTournamentId,
+                    Triples = p.Triples,
                 }).ToList(),
                 WinnerId = game.WinnerId,
                 CurrentTurnId = game.CurrentTurnId,

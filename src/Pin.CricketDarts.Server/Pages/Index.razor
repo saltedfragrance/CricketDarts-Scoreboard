@@ -1,11 +1,63 @@
 ﻿@page "/"
 @inject IPlayerService playerService;
+@inject ITournamentService tournamentService;
 <PageTitle>Player Registration</PageTitle>
-<Registration OnSave="AddPlayer"></Registration>
+<Registration OnSave="AddPlayer"
+              TournamentIsFull="TournamentIsFull"
+              SpacesLeft="SpacesLeft"
+              CurrentTournament="CurrentTournament"
+              RegisterDisabled="RegisterDisabled"
+              TournamentLoaded="TournamentLoaded"></Registration>
+
 
 @code{
-    private void AddPlayer(Player player)
+    [Parameter]
+    public int SpacesLeft { get; set; }
+    [Parameter]
+    public bool TournamentIsFull { get; set; }
+    [Parameter]
+    public bool TournamentLoaded { get; set; } = false;
+    [Parameter]
+    public bool RegisterDisabled { get; set; }
+    [Parameter]
+    public Tournament CurrentTournament { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        playerService.CreatePlayer(player);
+        CurrentTournament = await GetCurrentTournament();
+        await CheckForSpaces();
+    }
+
+    private async Task<Tournament> GetCurrentTournament()
+    {
+        var tournaments = await tournamentService.GetTournaments();
+
+        if (!tournaments.Any(t => t.IsOngoing)) return null;
+        if (tournaments.Any(t => t.IsOngoing)) return tournaments.Where(t => t.IsOngoing).FirstOrDefault();
+        else return null;
+    }
+
+    private async Task AddPlayer(Player player)
+    {
+        player.CurrentTournamentId = CurrentTournament.Id;
+        player.HasTurn = false;
+        if (!TournamentIsFull) await playerService.CreatePlayer(player);
+        await CheckForSpaces();
+    }
+
+    private async Task CheckForSpaces()
+    {
+        if (CurrentTournament != null)
+        {
+            CurrentTournament = await GetCurrentTournament();
+            var playerCount = CurrentTournament.Participants.Count();
+
+            TournamentLoaded = true;
+            SpacesLeft = (6 - CurrentTournament.Participants.Count());
+
+            if (playerCount == 6) TournamentIsFull = true;
+            else TournamentIsFull = false;
+        }
+        else TournamentIsFull = false;
     }
 }

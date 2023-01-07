@@ -11,5 +11,6 @@ namespace Pin.CricketDarts.Core.Entities
     {
         public bool IsOngoing { get; set; } = false;
         public ICollection<Game> Games { get; set; }
+        public ICollection<Player> Participants { get; set; }
     }
 }

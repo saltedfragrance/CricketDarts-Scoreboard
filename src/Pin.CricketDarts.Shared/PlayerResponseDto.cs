@@ -10,5 +10,6 @@ namespace Pin.CricketDarts.Shared
         public int CurrentTotalScore { get; set; }
         public int Doubles { get; set; }
         public int Triples { get; set; }
+        public Guid TournamentId { get; set; }
     }
 }

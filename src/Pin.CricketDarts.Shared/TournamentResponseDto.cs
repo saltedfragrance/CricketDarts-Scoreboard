@@ -10,5 +10,7 @@ namespace Pin.CricketDarts.Shared
     public class TournamentResponseDto : BaseDto
     {
         public bool IsOngoing { get; set; }
+        public IEnumerable<GameResponseDto> Games { get; set; }
+        public IEnumerable<PlayerResponseDto> Participants { get; set; }
     }
 }

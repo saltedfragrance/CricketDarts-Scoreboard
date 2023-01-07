@@ -7,7 +7,7 @@ namespace Pin.CricketDarts.Server.Models
         public bool IsActive { get; set; } = false;
         public Guid? CurrentTurnId { get; set; }
         public IEnumerable<Player> Players { get; set; }
-        public Guid WinnerId { get; set; }
+        public Guid? WinnerId { get; set; }
         public List<ScoreBoardEntry> ScoreBoardEntries { get; set; }
         public Guid TournamentId { get; set; }
     }

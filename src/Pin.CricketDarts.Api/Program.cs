@@ -24,11 +24,13 @@ namespace Pin.CricketDarts.Api
             builder.Services.AddScoped<IGameRepository, GameRepository>();
             builder.Services.AddScoped<IScoreBoardEntryRepository, ScoreBoardEntryRepository>();
             builder.Services.AddScoped<ITurnRepository, TurnRepository>();
+            builder.Services.AddScoped<ITournamentRepository, TournamentRepository>();
 
             builder.Services.AddScoped<IPlayerService, PlayerService>();
             builder.Services.AddScoped<IGameService, GameService>();
             builder.Services.AddScoped<IScoreBoardEntryService, ScoreBoardEntryService>();
             builder.Services.AddScoped<ITurnService, TurnService>();
+            builder.Services.AddScoped<ITournamentService, TournamentService>(); ;
 
 
             builder.Services.AddEndpointsApiExplorer();

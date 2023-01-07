@@ -27,7 +27,13 @@ namespace Pin.CricketDarts.Core.Services
             var game = new Game
             {
                 Id = gameRequestDto.Id,
-                IsActive = gameRequestDto.IsActive
+                IsActive = gameRequestDto.IsActive,
+                TournamentId = gameRequestDto.TournamentId,
+                PlayerGames = gameRequestDto.Players.Select(p => new PlayerGame
+                {
+                    GameId = gameRequestDto.Id,
+                    PlayerId = p.Id,
+                }).ToList()
             };
             await _gameRepository.AddAsync(game);
         }
@@ -48,7 +54,8 @@ namespace Pin.CricketDarts.Core.Services
                     HasTurn = p.HasTurn,
                     Doubles = p.Doubles,
                     Triples = p.Triples,
-                    CurrentTotalScore = p.TotalPointsScored
+                    CurrentTotalScore = p.TotalPointsScored,
+                    TournamentId = p.TournamentId
                 }),
                 ScoreBoardEntries = g.ScoreBoard.Select(x => new ScoreBoardEntryResponseDto
                 {

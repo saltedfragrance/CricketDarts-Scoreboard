@@ -19,7 +19,7 @@ namespace Pin.CricketDarts.Infrastructure.Repositories.Base
             _dbContext = dbContext;
         }
 
-        public async Task<T> AddAsync(T entity)
+        public virtual async Task<T> AddAsync(T entity)
         {
             await _dbContext.Set<T>().AddAsync(entity);
             await _dbContext.SaveChangesAsync();

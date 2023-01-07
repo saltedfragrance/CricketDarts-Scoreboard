@@ -1,25 +1,44 @@
-﻿<div class="text-light d-inline-block">
-    <EditForm Model="@NewPlayer" OnValidSubmit="@HandleValidSubmit">
-        <DataAnnotationsValidator />
-        <div class="card-body">
-            <div class="form-group mb-3">
-                <div class="row">
-                    <div class="col-1 my-auto m-4">
-                        <label>Name: </label>
-                    </div>
-                    <div class="col">
-                        <ValidationMessage For="@(() => NewPlayer.Name)" />
-                        <InputText class="form-control"
-                                   @bind-Value="NewPlayer.Name">
-                        </InputText>
+﻿<div class="text-dark d-inline-block">
+    <div hidden="@TournamentLoaded">No tournament set yet. Please go to the games page first to create a tournament.</div>
+    <div hidden="@(!TournamentLoaded)">
+        <div hidden="@(!TournamentIsFull)">The current tournament is full. No more registrations allowed!</div>
+        <div hidden="@TournamentIsFull">The current tournament has @SpacesLeft spaces left.</div>
+    </div>
+
+    <div hidden="@(!TournamentLoaded)">
+        <EditForm Model="@NewPlayer" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <div class="card-body">
+                <div class="form-group mb-3">
+                    <div class="row">
+                        <div class="col-1 my-auto m-4">
+                            <label>Name: </label>
+                        </div>
+                        <div class="col">
+                            <ValidationMessage For="@(() => NewPlayer.Name)" />
+                            <InputText class="form-control"
+                                       @bind-Value="NewPlayer.Name">
+                            </InputText>
+                        </div>
                     </div>
                 </div>
+                <button disabled="@TournamentIsFull" type="submit" class="btn btn-primary">Register for tournament</button>
             </div>
-            <button type="submit" class="btn btn-primary">Register for tournament</button>
-        </div>
-    </EditForm>
+        </EditForm>
+    </div>
 </div>
 @code {
+    [Parameter]
+    public bool RegisterDisabled { get; set; }
+    [Parameter]
+    public int SpacesLeft { get; set; }
+    [Parameter]
+    public bool TournamentIsFull { get; set; }
+    [Parameter]
+    public bool TournamentLoaded { get; set; }
+    [Parameter]
+    public Tournament CurrentTournament { get; set; }
+
     [Parameter]
     public Player NewPlayer { get; set; } = new();
     [Parameter]

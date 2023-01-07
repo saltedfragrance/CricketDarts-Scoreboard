@@ -13,8 +13,8 @@ namespace Pin.CricketDarts.Core.Entities
         public Tournament Tournament { get; set; }
         public Guid? CurrentTurnId { get; set; }
         public bool IsActive { get; set; } = false;
-        public ICollection<PlayerGames> PlayerGames { get; set; }
-        public Guid WinnerId { get; set; }
+        public Guid? WinnerId { get; set; }
         public ICollection<ScoreBoardEntry> ScoreBoard { get; set; }
+        public ICollection<PlayerGame> PlayerGames { get; set; }
     }
 }

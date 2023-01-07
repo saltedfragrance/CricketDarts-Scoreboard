@@ -21,7 +21,8 @@ namespace Pin.CricketDarts.Server.Services.Api
             {
                 Name = player.Name,
                 Id = Guid.NewGuid(),
-                HasTurn = player.HasTurn
+                HasTurn = player.HasTurn,
+                TournamentId = player.CurrentTournamentId
             };
 
             return _httpClient.PostAsJsonAsync<PlayerRequestDto>(baseUrl, dto);
@@ -40,6 +41,7 @@ namespace Pin.CricketDarts.Server.Services.Api
                 CurrentTotalScore = p.CurrentTotalScore,
                 Doubles = p.Doubles,
                 Triples = p.Triples,
+                CurrentTournamentId = p.CurrentTournamentId
             }).ToList();
         }
         public async Task UpdatePlayer(Player player)
@@ -53,6 +55,7 @@ namespace Pin.CricketDarts.Server.Services.Api
                 CurrentTotalScore = player.CurrentTotalScore,
                 HasTurn = player.HasTurn,
                 Id = player.Id,
+                TournamentId = player.CurrentTournamentId
             };
             await _httpClient.PutAsJsonAsync<PlayerRequestDto>($"{baseUrl}", dto);
 

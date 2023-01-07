@@ -1,20 +1,70 @@
 ﻿@page "/tournament"
 @inject IGameService gameService;
+@inject ITournamentService tournamentService;
 
-<PageTitle>Games overview</PageTitle>
-<GamesOverview CurrentGames="CurrentGames"></GamesOverview>
+<PageTitle>Tournament page</PageTitle>
+<GamesOverview CurrentGames="CurrentGames"
+               GenerateGames="GenerateGames"
+               CurrentTournament="CurrentTournament"
+               CreateTournament="CreateTournament"></GamesOverview>
 
 @code{
     [Parameter]
+    public Tournament CurrentTournament { get; set; }
+    [Parameter]
     public List<Game> CurrentGames { get; set; }
+
+    private async Task GenerateGames()
+    {
+        Random random = new Random();
+        List<Player> alreadyChosen = new List<Player>();
+
+        for (int i = 0; i <= 2; i++)
+        {
+            var players = CurrentTournament.Participants.Where(p => !alreadyChosen.Contains(p)).OrderBy(x => random.Next()).Take(2).ToList();
+            alreadyChosen.AddRange(players);
+
+            var toAdd = new Game
+            {
+                Id = Guid.NewGuid(),
+                IsActive = true,
+                TournamentId = CurrentTournament.Id,
+                Players = players
+            };
+
+            await gameService.CreateGame(toAdd);
+        }
+        await RefreshGames();
+    }
 
     protected override async Task OnInitializedAsync()
     {
+        CurrentTournament = await GetCurrentTournament();
         await RefreshGames();
+    }
+
+    private async Task<Tournament>
+    GetCurrentTournament()
+    {
+        var tournaments = await tournamentService.GetTournaments();
+
+        if (!tournaments.Any(t => t.IsOngoing)) return null;
+        if (tournaments.Any(t => t.IsOngoing)) return tournaments.Where(t => t.IsOngoing).FirstOrDefault();
+        else return null;
     }
 
     private async Task RefreshGames()
     {
-        CurrentGames = (await gameService.GetGames()).Where(g => g.IsActive).ToList();
+        if (CurrentTournament != null && CurrentTournament.Games != null)
+        {
+            CurrentGames = (await gameService.GetGames()).Where(g => g.IsActive && g.TournamentId == CurrentTournament.Id).ToList();
+        }
+        StateHasChanged();
+    }
+
+    private async Task CreateTournament()
+    {
+        await tournamentService.CreateTournament(new Tournament { Id = Guid.NewGuid(), IsOngoing = true });
+        await GetCurrentTournament();
     }
 }

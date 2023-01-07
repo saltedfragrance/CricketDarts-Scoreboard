@@ -24,7 +24,9 @@ namespace Pin.CricketDarts.Core.Services
             var player = new Player
             {
                 Id = playerRequestDto.Id,
-                Name = playerRequestDto.Name
+                Name = playerRequestDto.Name,
+                TournamentId = playerRequestDto.TournamentId,
+                HasTurn = playerRequestDto.HasTurn
             };
 
             await _playerRepository.AddAsync(player);
@@ -39,7 +41,8 @@ namespace Pin.CricketDarts.Core.Services
                 HasTurn = r.HasTurn,
                 Triples = r.Triples,
                 Doubles = r.Doubles,
-                CurrentTotalScore = r.TotalPointsScored
+                CurrentTotalScore = r.TotalPointsScored,
+                TournamentId = r.TournamentId,
             }).ToList();
 
             return dtos;
@@ -59,7 +62,8 @@ namespace Pin.CricketDarts.Core.Services
                 HasTurn = playerRequestDto.HasTurn,
                 Triples = playerRequestDto.Triples,
                 Doubles = playerRequestDto.Doubles,
-                TotalPointsScored = playerRequestDto.CurrentTotalScore
+                TotalPointsScored = playerRequestDto.CurrentTotalScore,
+                TournamentId = playerRequestDto.TournamentId
             };
 
             await _playerRepository.UpdateAsync(player);
