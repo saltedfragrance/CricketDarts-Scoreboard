@@ -39,7 +39,8 @@ namespace Pin.CricketDarts.Server.Services
                         CurrentScore = p.CurrentTotalScore,
                         TotalDoubles = p.Doubles,
                         TotalTriples = p.Triples
-                    }).ToList()
+                    }).ToList(),
+                    IsActive = g.IsActive,
                 };
 
                 game.Players.ForEach(p =>

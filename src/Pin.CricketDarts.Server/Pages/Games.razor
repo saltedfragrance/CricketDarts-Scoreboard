@@ -39,25 +39,24 @@
 
     protected override async Task OnInitializedAsync()
     {
-        CurrentTournament = await GetCurrentTournament();
+        await GetCurrentTournament();
         await RefreshGames();
     }
 
-    private async Task<Tournament>
+    private async Task
     GetCurrentTournament()
     {
         var tournaments = await tournamentService.GetTournaments();
 
-        if (!tournaments.Any(t => t.IsOngoing)) return null;
-        if (tournaments.Any(t => t.IsOngoing)) return tournaments.Where(t => t.IsOngoing).FirstOrDefault();
-        else return null;
+        if (tournaments.Any(t => t.IsOngoing)) CurrentTournament = tournaments.Where(t => t.IsOngoing).FirstOrDefault();
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task RefreshGames()
     {
         if (CurrentTournament != null && CurrentTournament.Games != null)
         {
-            CurrentGames = (await gameService.GetGames()).Where(g => g.IsActive && g.TournamentId == CurrentTournament.Id).ToList();
+            CurrentGames = (await gameService.GetGames()).Where(g => g.TournamentId == CurrentTournament.Id).ToList();
         }
         StateHasChanged();
     }
@@ -66,5 +65,6 @@
     {
         await tournamentService.CreateTournament(new Tournament { Id = Guid.NewGuid(), IsOngoing = true });
         await GetCurrentTournament();
+        await RefreshGames();
     }
 }

@@ -10,28 +10,35 @@
     {
         @if (CurrentGames.Count() == 0 && CurrentTournament.Participants.Count() < 6)
         {
-
             <div>There need to be at least 6 participants to start the tournament.</div>
             <div>Players can sign up on the registration page.</div>
         }
-        @if (CurrentGames.Count() == 0)
+        @if (CurrentGames.Count() == 0 && CurrentTournament.Participants.Count() == 6)
         {
             <p>No games yet!</p>
             <div><button @onclick="e => GenerateGames.InvokeAsync()">Generate games for current tournament</button></div>
         }
-
-    }
-    @if (CurrentGames != null && CurrentTournament != null)
-    {
-        <div class="mb-5"><h1><b><u>Ongoing games overview</u></b></h1></div>
-        @foreach (var game in CurrentGames)
+        @if (CurrentGames.Count() > 0)
         {
-            <div class="mb-3">
-                <button @onclick="@(()=>navigationManager.NavigateTo($"/SelectedGame/{game.Id}"))" class="btn btn-success">@game.Players.ElementAt(0).Name vs @game.Players.ElementAt(1).Name</button>
-            </div>
+            <div class="mb-5"><h1><b><u>Ongoing games overview</u></b></h1></div>
+            @if (CurrentGames.Any(g => g.IsActive))
+            {
+                @foreach (var game in CurrentGames.Where(g => g.IsActive))
+                {
+                    <div class="mb-3">
+                        <button @onclick="@(()=>navigationManager.NavigateTo($"/SelectedGame/{game.Id}"))" class="btn btn-success">@game.Players.ElementAt(0).Name vs @game.Players.ElementAt(1).Name</button>
+                    </div>
+                }
+            }
+            else
+            {
+                <div>The tournament has ended! Do you wish to generate another Tournament?</div>
+                <div><button>Generate new tournament</button></div>
+            }
 
         }
     }
+
 </div>
 
 @code {
