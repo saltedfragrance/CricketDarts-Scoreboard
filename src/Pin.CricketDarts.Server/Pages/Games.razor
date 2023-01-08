@@ -1,6 +1,7 @@
 ﻿@page "/tournament"
 @inject IGameService gameService;
 @inject ITournamentService tournamentService;
+@inject IStatisticsService statisticsService;
 
 <PageTitle>Tournament page</PageTitle>
 <GamesOverview CurrentGames="CurrentGames"
@@ -58,6 +59,7 @@
         {
             CurrentGames = (await gameService.GetGames()).Where(g => g.TournamentId == CurrentTournament.Id).ToList();
         }
+        await statisticsService.SendStatistics();
         StateHasChanged();
     }
 

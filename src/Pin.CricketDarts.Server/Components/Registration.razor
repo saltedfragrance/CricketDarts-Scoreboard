@@ -5,26 +5,28 @@
         <div hidden="@TournamentIsFull">The current tournament has @SpacesLeft spaces left.</div>
     </div>
 
-    <div hidden="@(!TournamentLoaded)">
-        <EditForm Model="@NewPlayer" OnValidSubmit="@HandleValidSubmit">
-            <DataAnnotationsValidator />
-            <div class="card-body">
-                <div class="form-group mb-3">
-                    <div class="row">
-                        <div class="col-1 my-auto m-4">
-                            <label>Name: </label>
-                        </div>
-                        <div class="col">
-                            <ValidationMessage For="@(() => NewPlayer.Name)" />
-                            <InputText class="form-control"
-                                       @bind-Value="NewPlayer.Name">
-                            </InputText>
+    <div hidden="@TournamentIsFull">
+        <div hidden="@(!TournamentLoaded)">
+            <EditForm Model="@NewPlayer" OnValidSubmit="@HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <div class="col-1 my-auto m-4">
+                                <label>Name: </label>
+                            </div>
+                            <div class="col">
+                                <ValidationMessage For="@(() => NewPlayer.Name)" />
+                                <InputText class="form-control"
+                                           @bind-Value="NewPlayer.Name">
+                                </InputText>
+                            </div>
                         </div>
                     </div>
+                    <button disabled="@TournamentIsFull" type="submit" class="btn btn-primary">Register for tournament</button>
                 </div>
-                <button disabled="@TournamentIsFull" type="submit" class="btn btn-primary">Register for tournament</button>
-            </div>
-        </EditForm>
+            </EditForm>
+        </div>
     </div>
 </div>
 @code {

@@ -4,7 +4,7 @@
     @if (CurrentTournament == null)
     {
         <div>No active tournament currently!</div>
-        <div><button @onclick="e => CreateTournament.InvokeAsync()">Create new tournament</button></div>
+        <div><button class="btn-success" @onclick="e => CreateTournament.InvokeAsync()">Create new tournament</button></div>
     }
     @if (CurrentGames != null && CurrentTournament != null)
     {
@@ -16,7 +16,7 @@
         @if (CurrentGames.Count() == 0 && CurrentTournament.Participants.Count() == 6)
         {
             <p>No games yet!</p>
-            <div><button @onclick="e => GenerateGames.InvokeAsync()">Generate games for current tournament</button></div>
+            <div><button class="btn-success" @onclick="e => GenerateGames.InvokeAsync()">Generate games for current tournament</button></div>
         }
         @if (CurrentGames.Count() > 0)
         {

@@ -73,12 +73,15 @@
     private async Task UpdateScoreBoard(int target)
     {
         //alle huidige worpen van de huidige turn
-        var CurrentPlayerEntries = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == CurrentPlayer.Id && s.TurnId == ActiveGame.CurrentTurnId).ToList();
+        var currentPlayerEntries = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == CurrentPlayer.Id && s.TurnId == ActiveGame.CurrentTurnId).ToList();
+
+        //alle vorige worpen
+        var previousEntries = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == CurrentPlayer.Id && s.TurnId != ActiveGame.CurrentTurnId).ToList();
 
         //vorige entry in vorige turn ophalen, indien aanwezig
         var previousEntryOfPreviousTurn = ActiveGame.ScoreBoardEntries.Where(s => s.Target == target
-                                                && s.GameId == ActiveGame.Id
-                                                && s.PlayerId == CurrentPlayer.Id).OrderBy(t => Math.Abs((DateTime.Now - t.DateAndTime).Ticks)).FirstOrDefault();
+                                            && s.GameId == ActiveGame.Id
+                                            && s.PlayerId == CurrentPlayer.Id).OrderBy(t => Math.Abs((DateTime.Now - t.DateAndTime).Ticks)).FirstOrDefault();
 
         //vorige entry in huidige turn ophalen, indien aanwezig
         var previousEntryOfCurrentTurn = ActiveGame.ScoreBoardEntries.Where(s => s.Target == target
@@ -107,30 +110,35 @@
         };
 
         //checken indien er een 4de target aangeworpen wordt
-        if (CurrentPlayerEntries.Count() == 3 && currentEntry == null)
+        if (currentPlayerEntries.Count() == 3 && currentEntry == null)
         {
             return;
         }
         //checken indien er meerdere targets geworpen zijn, het aantal worpen nog logisch is
         if (currentEntry != null)
         {
-            if (CurrentPlayerEntries.Count == 2 && currentEntry.AmountClicks == 6)
+            if (currentPlayerEntries.Count == 2 && currentEntry.AmountClicks == 6)
             {
                 return;
             }
-            if (CurrentPlayerEntries.Count == 3 && currentEntry.AmountClicks == 3)
+            if (currentPlayerEntries.Count == 3 && currentEntry.AmountClicks == 3)
             {
                 return;
             }
+
         }
         //checken indien er targets zijn met amountclicks > 3 => dan is er 1 target minder mogelijk aan te klikken
-        if (CurrentPlayerEntries.Count() != 0)
+        if (currentPlayerEntries.Count() != 0)
         {
-            if (CurrentPlayerEntries.Any(e => e.AmountClicks > 3) && CurrentPlayerEntries.Count == 2)
+            if (currentPlayerEntries.Any(e => e.AmountClicks > 3) && currentPlayerEntries.Count == 2)
             {
                 if (currentEntry == null) return;
+                if (currentEntry != null)
+                {
+                    if (currentEntry.AmountClicks == 3) return;
+                }
             }
-            if (CurrentPlayerEntries.Any(e => e.AmountClicks > 6) && CurrentPlayerEntries.Count == 1)
+            if (currentPlayerEntries.Any(e => e.AmountClicks > 6) && currentPlayerEntries.Count == 1)
             {
                 if (currentEntry == null) return;
             }
@@ -246,12 +254,10 @@
     private async Task CheckForWinner()
     {
         //checken op winnaar
-        Player winner = null;
-        int countOfTargets;
         foreach (var player in ActiveGame.Players)
         {
             var otherPlayer = ActiveGame.Players.Where(p => p.Id != player.Id).FirstOrDefault();
-            countOfTargets = 0;
+            var otherPlayerEntries = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(s => s.PlayerId == otherPlayer.Id).ToList();
             var entries = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(e => e.PlayerId == player.Id && e.GameId == ActiveGame.Id).Where(y => y.Status == 3)
                                                                                .Select(x => new { x.Target, x.Status }).Distinct().ToList();
 
@@ -261,6 +267,31 @@
                 ActiveGame.IsActive = false;
                 Winner = player;
                 await playerService.UpdatePlayer(player);
+                await gameService.UpdateGame(ActiveGame);
+                StateHasChanged();
+                return;
+            }
+            else if (entries.Count() == 7 && otherPlayerEntries.Count() == 7 && entries.All(x => x.Status == 3) && otherPlayerEntries.All(x => x.Status == 3) && player.CurrentTotalScore == otherPlayer.CurrentTotalScore)
+            {
+                //winner gelijkspel berekenen => eerste die uitgeworpen is indien geen vorige matchen waaraan speler heeft deelgenomen
+                var lastEntryOtherPlayer = otherPlayerEntries.OrderBy(t => Math.Abs((DateTime.Now - t.DateAndTime).Ticks)).FirstOrDefault();
+                var lastEntryPlayer = (await scoreBoardEntryService.GetScoreBoardEntries()).Where(e => e.PlayerId == player.Id && e.GameId == ActiveGame.Id).OrderBy(t => Math.Abs((DateTime.Now - t.DateAndTime).Ticks)).FirstOrDefault();
+
+                var result = DateTime.Compare(lastEntryPlayer.DateAndTime, lastEntryOtherPlayer.DateAndTime);
+                if (result == -1)
+                {
+                    ActiveGame.WinnerId = player.Id;
+                    Winner = player;
+                }
+                else
+                {
+                    ActiveGame.WinnerId = otherPlayer.Id;
+                    Winner = otherPlayer;
+                }
+
+                ActiveGame.IsActive = false;
+                await playerService.UpdatePlayer(player);
+                await playerService.UpdatePlayer(otherPlayer);
                 await gameService.UpdateGame(ActiveGame);
                 StateHasChanged();
                 return;
