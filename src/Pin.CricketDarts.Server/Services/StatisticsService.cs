@@ -104,6 +104,7 @@ namespace Pin.CricketDarts.Server.Services
             else return 0;
         }
 
+        //indien spelers hetzelfde aantal gewonnen spellen hebben, ze sorteren door de average score te berekenen en ze dan te reversen in de lijst
         private async Task<List<DartsPlayer>> SortPlayersByAverageScore(List<DartsPlayer> allPlayers)
         {
             if (allPlayers != null)
