@@ -20,9 +20,9 @@
         }
         @if (CurrentGames.Count() > 0)
         {
-            <div class="mb-5"><h1><b><u>Ongoing games overview</u></b></h1></div>
             @if (CurrentGames.Any(g => g.IsActive))
             {
+                <div class="mb-5"><h1><b><u>Ongoing games overview</u></b></h1></div>
                 @foreach (var game in CurrentGames.Where(g => g.IsActive))
                 {
                     <div class="mb-3">
@@ -33,7 +33,7 @@
             else
             {
                 <div>The tournament has ended! Do you wish to generate another Tournament?</div>
-                <div><button>Generate new tournament</button></div>
+                <div><button @onclick="e => CreateTournament.InvokeAsync()">Generate new tournament</button></div>
             }
 
         }

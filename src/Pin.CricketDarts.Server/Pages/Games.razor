@@ -65,6 +65,11 @@
 
     private async Task CreateTournament()
     {
+        //ander tournament deactiveren
+        var tournaments = await tournamentService.GetTournaments();
+        if (tournaments != null) tournaments.ForEach(t => t.IsOngoing = false);
+
+
         await tournamentService.CreateTournament(new Tournament { Id = Guid.NewGuid(), IsOngoing = true });
         await GetCurrentTournament();
         await RefreshGames();
