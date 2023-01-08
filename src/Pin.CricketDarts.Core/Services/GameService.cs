@@ -88,7 +88,7 @@ namespace Pin.CricketDarts.Core.Services
                 IsActive = gameRequestDto.IsActive,
                 WinnerId = gameRequestDto.WinnerId,
                 CurrentTurnId = gameRequestDto.CurrentTurnId,
-                TournamentId = gameRequestDto.TournamentId,
+                TournamentId = gameRequestDto.TournamentId
             };
             await _gameRepository.UpdateAsync(game);
         }

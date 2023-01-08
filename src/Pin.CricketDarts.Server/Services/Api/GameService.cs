@@ -64,7 +64,7 @@ namespace Pin.CricketDarts.Server.Services.Api
                 }).ToList(),
                 WinnerId = p.WinnerId,
                 CurrentTurnId = p.CurrentTurnId,
-                TournamentId = p.TournamentId,
+                TournamentId = p.TournamentId
             }).ToList();
         }
 

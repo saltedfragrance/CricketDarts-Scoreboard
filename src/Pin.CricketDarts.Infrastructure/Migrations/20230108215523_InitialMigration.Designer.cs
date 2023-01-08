@@ -12,7 +12,7 @@ using Pin.CricketDarts.Infrastructure.Data;
 namespace Pin.CricketDarts.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230107213003_InitialMigration")]
+    [Migration("20230108215523_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

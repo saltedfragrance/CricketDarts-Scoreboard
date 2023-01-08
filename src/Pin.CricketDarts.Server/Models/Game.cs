@@ -10,5 +10,7 @@ namespace Pin.CricketDarts.Server.Models
         public Guid? WinnerId { get; set; }
         public List<ScoreBoardEntry> ScoreBoardEntries { get; set; }
         public Guid TournamentId { get; set; }
+        public int ScorePlayerOne { get; set; }
+        public int ScorePlayerTwo { get; set; }
     }
 }
