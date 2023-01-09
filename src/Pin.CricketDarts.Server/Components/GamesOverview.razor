@@ -16,7 +16,7 @@
         @if (CurrentGames.Count() == 0 && CurrentTournament.Participants.Count() == 6)
         {
             <p>No games yet!</p>
-            <div><button class="btn-success" @onclick="e => GenerateGames.InvokeAsync()">Generate games for current tournament</button></div>
+            <div><button class="btn-success" @onclick="e => GenerateGames.InvokeAsync(CurrentTournament.Participants.ToList())">Generate games for current tournament</button></div>
         }
         @if (CurrentGames.Count() > 0)
         {
@@ -47,7 +47,7 @@
     [Parameter]
     public List<Game> CurrentGames { get; set; }
     [Parameter]
-    public EventCallback GenerateGames { get; set; }
+    public EventCallback<List<Player>> GenerateGames { get; set; }
     [Parameter]
     public EventCallback CreateTournament { get; set; }
 }
