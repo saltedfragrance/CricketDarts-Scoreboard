@@ -18,16 +18,16 @@
             Winner="Winner"></ScoreBoard>
 
 @code{
-    [Parameter]
-    public Guid SelectedGameId { get; set; }
-    [Parameter]
-    public Game ActiveGame { get; set; } = new();
-    [Parameter]
-    public Player CurrentPlayer { get; set; }
-    [Parameter]
-    public Turn CurrentTurn { get; set; }
-    [Parameter]
-    public Player Winner { get; set; }
+        [Parameter]
+        public Guid SelectedGameId { get; set; }
+        [Parameter]
+        public Game ActiveGame { get; set; } = new();
+        [Parameter]
+        public Player CurrentPlayer { get; set; }
+        [Parameter]
+        public Turn CurrentTurn { get; set; }
+        [Parameter]
+        public Player Winner { get; set; }
 
     public ScoreBoard scoreBoard;
 
@@ -65,7 +65,11 @@
         //indien game stopgezet op triple of double selectiescherm, eerst dat doen
         if (CurrentTurn! != null)
         {
-            if (ActiveGame.Players.All(p => p.HasTurn == false) && ActiveGame.CurrentTurnId != null && CurrentTurn.SelectionMode == true) await CheckForEarlyEnding();
+            if (ActiveGame.Players.All(p => p.HasTurn == false) && ActiveGame.CurrentTurnId != null && CurrentTurn.SelectionMode == true)
+            {
+                StateHasChanged();
+                await scoreBoard.SelectThrows(CurrentTurn.CurrentAmountOfThrows);
+            }
         }
 
         await statisticsService.SendStatistics();
