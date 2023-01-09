@@ -96,7 +96,7 @@
                     int i = 1;
                     @foreach (var player in Players.Where(t => t.TotalDoubles != 0).OrderByDescending(p => p.TotalDoubles))
                     {
-                        @if (player.TotalTriples != 0)
+                        @if (player.TotalDoubles != 0)
                         {
                             <div class="mb-4">
                                 <div class="row">
