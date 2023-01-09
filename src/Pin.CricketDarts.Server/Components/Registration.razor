@@ -1,31 +1,33 @@
-﻿<div class="text-dark d-inline-block">
-    <div hidden="@TournamentLoaded">No tournament set yet. Please go to the games page first to create a tournament.</div>
-    <div hidden="@(!TournamentLoaded)">
-        <div hidden="@(!TournamentIsFull)">The current tournament is full. No more registrations allowed!</div>
-        <div hidden="@TournamentIsFull">The current tournament has @SpacesLeft spaces left.</div>
-    </div>
+﻿
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-1 mx-auto d-flex justify-content-center">
+    <div class="card shadow mb-5 align-items-center bg-dark w-50 p-5">
+        <div class="text-light d-inline-block">
+            <div hidden="@TournamentLoaded">No tournament set yet. Please go to the games page first to create a tournament.</div>
+            <div hidden="@(!TournamentLoaded)">
+                <div hidden="@(!TournamentIsFull)">The current tournament is full. No more registrations allowed!</div>
+                <div hidden="@TournamentIsFull">The current tournament has @SpacesLeft spaces left.</div>
+            </div>
 
-    <div hidden="@TournamentIsFull">
-        <div hidden="@(!TournamentLoaded)">
-            <EditForm Model="@NewPlayer" OnValidSubmit="@HandleValidSubmit">
-                <DataAnnotationsValidator />
-                <div class="card-body">
-                    <div class="form-group mb-3">
-                        <div class="row">
-                            <div class="col-1 my-auto m-4">
-                                <label>Name: </label>
+            <div hidden="@TournamentIsFull">
+                <div hidden="@(!TournamentLoaded)">
+                    <EditForm Model="@NewPlayer" OnValidSubmit="@HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <div class="card-body">
+                            <div class="form-group mb-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <ValidationMessage For="@(() => NewPlayer.Name)" />
+                                        <InputText class="form-control"
+                                                   @bind-Value="NewPlayer.Name">
+                                        </InputText>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col">
-                                <ValidationMessage For="@(() => NewPlayer.Name)" />
-                                <InputText class="form-control"
-                                           @bind-Value="NewPlayer.Name">
-                                </InputText>
-                            </div>
+                            <button disabled="@TournamentIsFull" type="submit" class="btn btn-success">Register for tournament</button>
                         </div>
-                    </div>
-                    <button disabled="@TournamentIsFull" type="submit" class="btn btn-primary">Register for tournament</button>
+                    </EditForm>
                 </div>
-            </EditForm>
+            </div>
         </div>
     </div>
 </div>
@@ -49,5 +51,6 @@
     private void HandleValidSubmit()
     {
         OnSave.InvokeAsync(NewPlayer);
+        NewPlayer = new();
     }
 }

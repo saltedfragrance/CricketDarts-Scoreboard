@@ -2,8 +2,11 @@
 @inject NavigationManager navigationManager;
 @inject IStatisticsService statisticsService;
 
+<PageTitle>Statistics</PageTitle>
+<Heading Head="Statistics"></Heading>
 
-    <div class="mb-4"><h2><b><u>Current Ongoing Games</u></b></h2></div>
+<div class="text-light">
+    <div class="mb-4 text-danger"><h2><b><u>Current Ongoing Games</u></b></h2></div>
     @if (OngoingGames != null)
     {
         @if (OngoingGames.CurrentOngoingGames.Count() > 0)
@@ -35,8 +38,8 @@
     }
     @if (Players != null)
     {
-        <div class="mb-4"><h2><b><u>Statistics</u></b></h2></div>
-        <div class="mb-4"><h4>Most won games</h4></div>
+        <div class="mb-4 text-danger"><h2><b><u>Statistics</u></b></h2></div>
+        <div class="mb-4 text-danger"><h4>Most won games</h4></div>
         <div class="row row-cols-0 row-cols-md-2 d-flex justify-content-center">
             <div class="container">
                 @if (Players.Any(p => p.AmountWonGames > 0))
@@ -62,7 +65,7 @@
             </div>
         </div>
 
-        <div class="mb-4"><h4>Most triples</h4></div>
+        <div class="mb-4 text-danger"><h4>Most triples</h4></div>
         <div class="row row-cols-0 row-cols-md-2 d-flex justify-content-center">
             <div class="container">
                 @if (Players.Any(p => p.TotalTriples > 0))
@@ -88,7 +91,7 @@
             </div>
         </div>
 
-        <div class="mb-4"><h4>Most doubles</h4></div>
+        <div class="mb-4 text-danger"><h4>Most doubles</h4></div>
         <div class="row row-cols-0 row-cols-md-2 d-flex justify-content-center">
             <div class="container">
                 @if (Players.Any(p => p.TotalDoubles > 0))
@@ -114,33 +117,34 @@
             </div>
         </div>
     }
+</div>
 
 
-    @code {
-        private HubConnection hubConnection;
-        public OngoingGames OngoingGames { get; set; }
-        public List<DartsPlayer> Players { get; set; }
+@code {
+    private HubConnection hubConnection;
+    public OngoingGames OngoingGames { get; set; }
+    public List<DartsPlayer> Players { get; set; }
 
-        protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(navigationManager.ToAbsoluteUri("/statisticshub"))
+            .Build();
+
+        await hubConnection.StartAsync();
+
+        await statisticsService.SendStatistics();
+
+        hubConnection.On<OngoingGames>("ReceiveOngoingGames", (ongoingGames) =>
         {
-            hubConnection = new HubConnectionBuilder()
-                .WithUrl(navigationManager.ToAbsoluteUri("/statisticshub"))
-                .Build();
+            OngoingGames = ongoingGames;
+            StateHasChanged();
+        });
 
-            await hubConnection.StartAsync();
-
-            await statisticsService.SendStatistics();
-
-            hubConnection.On<OngoingGames>("ReceiveOngoingGames", (ongoingGames) =>
-            {
-                OngoingGames = ongoingGames;
-                StateHasChanged();
-            });
-
-            hubConnection.On<List<DartsPlayer>>("ReceiveAllPlayers", (players) =>
-            {
-                Players = players;
-                StateHasChanged();
-            });
-        }
+        hubConnection.On<List<DartsPlayer>>("ReceiveAllPlayers", (players) =>
+        {
+            Players = players;
+            StateHasChanged();
+        });
     }
+}

@@ -5,16 +5,16 @@
     int j;
     int i;
 
-    <div class="row text-light d-flex justify-content-center text-black">
+    <div class="row text-light d-flex justify-content-center text-light">
         <h1>Scoreboard</h1>
         <h3>@playerOne.Name vs @playerTwo.Name</h3>
     </div>
 
-    <div class="row row-cols-0  row-cols-lg-4  d-flex justify-content-center">
+    <div class="row row-cols-0  row-cols-lg-4  d-flex justify-content-center text-light">
         <div class="container">
             <div class="row border-bottom ">
                 <div class="col ">@playerOne.Name</div>
-                <div class="col"></div>
+                <div class="col">vs</div>
                 <div class="col">@playerTwo.Name</div>
             </div>
             @for (i = 20, j = 20; i > 13; i--, j--)
@@ -56,37 +56,37 @@
                 <div class="col">Current score: @playerTwo.CurrentTotalScore</div>
             </div>
             <div class="row" hidden="@(!CurrentTurn.SelectionMode)">
-                <div class="col">How many triples and doubles did the player throw?</div>
+                <div class="col text-danger">How many triples and doubles did the player throw?</div>
                 <div class="col">
                     @if (AmountOfTriples != 0 && AmountOfThrows != 5 && AmountOfThrows != 4)
                     {
-                        <button @onclick="e=> FillValues(AmountOfTriples)">@AmountOfTriples Triple(s)</button>
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(AmountOfTriples)">@AmountOfTriples Triple(s)</button>
                     }
                     @if (AmountOfDoubles != 0 && AmountOfThrows != 5 && AmountOfThrows != 4)
                     {
-                        <button @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles Double(s)</button>
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles Double(s)</button>
                     }
                     @if (AmountOfThrows == 5)
                     {
-                        <button @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles doubles</button>
-                        <button @onclick="e=> FillValues(AmountOfTriples, 1)">@AmountOfTriples triple and 1 double</button>
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles doubles</button>
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(AmountOfTriples, 1)">@AmountOfTriples triple and 1 double</button>
                     }
                     @if (AmountOfThrows == 4)
                     {
-                        <button @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles doubles</button>
-                        <button @onclick="e=> FillValues(AmountOfTriples, 1)">1 double</button>
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles doubles</button>
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(AmountOfTriples, 1)">1 double</button>
                     }
                 </div>
             </div>
             <div hidden="@(!ActiveGame.IsActive)">
-                <div>Current turn: @CurrentPlayer.Name</div>
-                <div><button disabled="@CurrentTurn.SelectionMode" class="btn btn-light" @onclick="e => ManualToggleTurns.InvokeAsync(true)">New turn</button></div>
+                <div>Current turn: <b>@CurrentPlayer.Name</b></div>
+                <div><button  disabled="@CurrentTurn.SelectionMode" class="btn btn-success mt-2 border-0 p-2 rounded-3" @onclick="e => ManualToggleTurns.InvokeAsync(true)">New turn</button></div>
             </div>
             <div hidden="@ActiveGame.IsActive">
                 @if (Winner != null)
                 {
                     <div>The game has ended!</div>
-                    <div>The winner is: @Winner.Name</div>
+                    <div>The winner is: <b>@Winner.Name</b></div>
                 }
                 else
                 {

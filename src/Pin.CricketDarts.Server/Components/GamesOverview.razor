@@ -1,47 +1,53 @@
 ﻿@inject NavigationManager navigationManager;
 
-<div class="text-dark d-inline-block">
-    @if (CurrentTournament == null)
-    {
-        <div>No active tournament currently!</div>
-        <div><button class="btn-success" @onclick="e => CreateTournament.InvokeAsync()">Create new tournament</button></div>
-    }
-    @if (CurrentGames != null && CurrentTournament != null)
-    {
-        @if (CurrentGames.Count() == 0 && CurrentTournament.Participants.Count() < 6)
-        {
-            <div>There need to be at least 6 participants to start the tournament.</div>
-            <div>Players can sign up on the registration page.</div>
-        }
-        @if (CurrentGames.Count() == 0 && CurrentTournament.Participants.Count() == 6)
-        {
-            <p>No games yet!</p>
-            <div><button class="btn-success" @onclick="e => GenerateGames.InvokeAsync(CurrentTournament.Participants.ToList())">Generate games for current tournament</button></div>
-        }
-        @if (CurrentGames.Count() > 0)
-        {
-            @if (CurrentGames.Any(g => g.IsActive))
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-1 mx-auto d-flex justify-content-center">
+    <div class="card shadow mb-5 align-items-center bg-dark w-50 p-5">
+        <div class="text-light d-inline-block">
+            @if (CurrentTournament == null)
             {
-                <div class="mb-5"><h1><b><u>Ongoing games overview</u></b></h1></div>
-                @foreach (var game in CurrentGames.Where(g => g.IsActive))
+                <div>No active tournament currently!</div>
+                <div><button class="btn-success mt-2 border-0 p-2 rounded-3" @onclick="e => CreateTournament.InvokeAsync()">Create new tournament</button></div>
+            }
+            @if (CurrentGames != null && CurrentTournament != null)
+            {
+                @if (CurrentGames.Count() == 0 && CurrentTournament.Participants.Count() < 6)
                 {
-                    <div class="mb-3">
-                        <button @onclick="@(()=>navigationManager.NavigateTo($"/SelectedGame/{game.Id}"))" class="btn btn-success">@game.Players.ElementAt(0).Name vs @game.Players.ElementAt(1).Name</button>
-                    </div>
+                    <div>There need to be at least 6 participants to start the tournament.</div>
+                    <div>Players can sign up on the registration page.</div>
+                }
+                @if (CurrentGames.Count() == 0 && CurrentTournament.Participants.Count() == 6)
+                {
+                    <p>No games yet!</p>
+                    <div><button class="btn-success mt-2 border-0 p-2 rounded-3" @onclick="e => GenerateGames.InvokeAsync(CurrentTournament.Participants.ToList())">Generate games for current tournament</button></div>
+                }
+                @if (CurrentGames.Count() > 0)
+                {
+                    @if (CurrentGames.Any(g => g.IsActive))
+                    {
+                        <div class="mb-5"><h1><b><u>Ongoing games overview</u></b></h1></div>
+                        @foreach (var game in CurrentGames.Where(g => g.IsActive))
+                        {
+                            <div class="mb-3">
+                                <button @onclick="@(()=>navigationManager.NavigateTo($"/SelectedGame/{game.Id}"))" class="btn btn-success">@game.Players.ElementAt(0).Name vs @game.Players.ElementAt(1).Name</button>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div>The tournament has ended! Do you wish to generate another Tournament?</div>
+                        <div><button class="btn-success mt-2 border-0 p-2 rounded-3" @onclick="e => CreateTournament.InvokeAsync()">Generate new tournament</button></div>
+                    }
+
                 }
             }
-            else
-            {
-                <div>The tournament has ended! Do you wish to generate another Tournament?</div>
-                <div><button @onclick="e => CreateTournament.InvokeAsync()">Generate new tournament</button></div>
-            }
 
-        }
-    }
-
+        </div>
+    </div>
 </div>
 
-@code {
+@code
+        {
     [Parameter]
     public Tournament CurrentTournament { get; set; }
     [Parameter]
