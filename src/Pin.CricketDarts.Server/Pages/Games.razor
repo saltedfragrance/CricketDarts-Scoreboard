@@ -1,0 +1,107 @@
+﻿@page "/tournament"
+@inject IGameService gameService;
+@inject ITournamentService tournamentService;
+@inject IStatisticsService statisticsService;
+@inject IGameService gameService;
+
+<PageTitle>Tournament page</PageTitle>
+<Heading Head="Tournament"></Heading>
+<GamesOverview CurrentGames="CurrentGames"
+               GenerateGames="GenerateGames"
+               CurrentTournament="CurrentTournament"
+               CreateTournament="CreateTournament"></GamesOverview>
+
+@code{
+        [Parameter]
+        public Tournament CurrentTournament { get; set; }
+        [Parameter]
+        public List<Game> CurrentGames { get; set; }
+
+        private async Task GenerateGames(List<Player> newPlayers)
+        {
+            Random random = new Random();
+            List<Player> alreadyChosen = new List<Player>();
+
+            for (int i = 0; i <= 2; i++)
+            {
+                var players = newPlayers.Where(p => !alreadyChosen.Contains(p)).OrderBy(x => random.Next()).Take(2).ToList();
+
+                alreadyChosen.AddRange(players);
+
+                var toAdd = new Game
+                {
+                    Id = Guid.NewGuid(),
+                    IsActive = true,
+                    TournamentId = CurrentTournament.Id,
+                    Players = players
+                };
+
+                await gameService.CreateGame(toAdd);
+            }
+            await RefreshGames();
+        }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCurrentTournament();
+        await RefreshGames();
+    }
+
+    //poging tot nieuwe games aanmaken, door alle combinaties van spelers aan te maken en die te vergelijken met de players die al in games gezeten hebben
+    private async Task CheckForFinishedGames()
+    {
+        var finishedGames = (await gameService.GetGames()).Where(g => g.IsActive == false && g.TournamentId == CurrentTournament.Id).ToList();
+
+        if (finishedGames != null)
+        {
+            if (finishedGames.Count > 1)
+            {
+                var finishedPlayers = finishedGames.Select(p => p.Players).ToList();
+                List<Player> players = new List<Player>();
+
+                //bron: https://stackoverflow.com/questions/3319586/getting-all-possible-combinations-from-a-list-of-numbers
+                var combinations = finishedPlayers.SelectMany((x, i) => finishedPlayers.Skip(i + 1), (x, y) => Tuple.Create(x, y));
+                foreach (var combination in combinations)
+                {
+                    List<Player> toAdd = new List<Player> { combination.Item1.First(), combination.Item2.Last() };
+                    if (finishedGames.Any(g => g.Players == toAdd) && CurrentGames.Any(p => toAdd.Any(p => toAdd.Contains(p)))) return;
+                    else
+                    {
+                        GenerateGames(toAdd);
+                    }
+                }
+            }
+        }
+
+    }
+
+    private async Task GetCurrentTournament()
+    {
+        var tournaments = await tournamentService.GetTournaments();
+
+        if (tournaments.Any(t => t.IsOngoing)) CurrentTournament = tournaments.Where(t => t.IsOngoing).FirstOrDefault();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RefreshGames()
+    {
+        if (CurrentTournament != null && CurrentTournament.Games != null)
+        {
+            CurrentGames = (await gameService.GetGames()).Where(g => g.TournamentId == CurrentTournament.Id).ToList();
+        }
+        await statisticsService.SendStatistics();
+        StateHasChanged();
+    }
+
+    private async Task CreateTournament()
+    {
+        //ander tournament deactiveren
+        var tournaments = await tournamentService.GetTournaments();
+        if (tournaments != null) tournaments.ForEach(t => t.IsOngoing = false);
+
+
+        await tournamentService.CreateTournament(new Tournament { Id = Guid.NewGuid(), IsOngoing = true });
+        await GetCurrentTournament();
+        await RefreshGames();
+    }
+}

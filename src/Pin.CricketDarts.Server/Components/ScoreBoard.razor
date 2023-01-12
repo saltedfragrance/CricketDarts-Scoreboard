@@ -1,0 +1,189 @@
+﻿@if (ActiveGame.Players != null)
+{
+    var playerOne = ActiveGame.Players.ElementAt(0);
+    var playerTwo = ActiveGame.Players.ElementAt(1);
+    int j;
+    int i;
+
+    <div class="row text-light d-flex justify-content-center text-light">
+        <h1>Scoreboard</h1>
+        <h3>@playerOne.Name vs @playerTwo.Name</h3>
+    </div>
+
+    <div class="row row-cols-0  row-cols-lg-4  d-flex justify-content-center text-light">
+        <div class="container">
+            <div class="row border-bottom ">
+                <div class="col ">@playerOne.Name</div>
+                <div class="col">vs</div>
+                <div class="col">@playerTwo.Name</div>
+            </div>
+            @for (i = 20, j = 20; i > 13; i--, j--)
+            {
+                int targetPlayerOne = i;
+                int targetPlayerTwo = j;
+                <div class="row">
+                    <div class="col border">
+                        @GetScore(i, playerOne.Id)
+                    </div>
+                    <div class="col border">
+                        <button disabled="@DisableInput(playerOne.Id, targetPlayerOne)" class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(targetPlayerOne)">
+                            @GetSymbol(i, playerOne.Id)
+                        </button>
+                    </div>
+                    <div class="col border-start border-end">
+                        @if (i == 14)
+                        {
+                            <span>Bull</span>
+                        }
+                        else
+                        {
+                            <span>@i</span>
+                        }
+                    </div>
+                    <div class="col border">
+                        <button disabled="@DisableInput(playerTwo.Id, targetPlayerTwo)" class="btn btn-light" @onclick="e => UpdateScoreBoard.InvokeAsync(targetPlayerTwo)">
+                            @GetSymbol(j, playerTwo.Id)
+                        </button>
+                    </div>
+                    <div class="col border">
+                        @GetScore(i, playerTwo.Id)
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <div class="col ">Current score: @playerOne.CurrentTotalScore</div>
+                <div class="col"></div>
+                <div class="col">Current score: @playerTwo.CurrentTotalScore</div>
+            </div>
+            <div class="row" hidden="@(!CurrentTurn.SelectionMode)">
+                <div class="col text-danger">How many triples and doubles did the player throw?</div>
+                <div class="col">
+                    @if (AmountOfTriples != 0 && AmountOfThrows != 5 && AmountOfThrows != 4)
+                    {
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(AmountOfTriples)">@AmountOfTriples Triple(s)</button>
+                    }
+                    @if (AmountOfDoubles != 0 && AmountOfThrows != 5 && AmountOfThrows != 4)
+                    {
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles Double(s)</button>
+                    }
+                    @if (AmountOfThrows == 5)
+                    {
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles doubles</button>
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(AmountOfTriples, 1)">@AmountOfTriples triple and 1 double</button>
+                    }
+                    @if (AmountOfThrows == 4)
+                    {
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(0, AmountOfDoubles)">@AmountOfDoubles doubles</button>
+                        <button class="btn-primary mt-2 border-0 p-2 rounded-3" @onclick="e=> FillValues(AmountOfTriples, 1)">1 double</button>
+                    }
+                </div>
+            </div>
+            <div hidden="@(!ActiveGame.IsActive)">
+                <div>Current turn: <b>@CurrentPlayer.Name</b></div>
+                <div><button  disabled="@CurrentTurn.SelectionMode" class="btn btn-success mt-2 border-0 p-2 rounded-3" @onclick="e => ManualToggleTurns.InvokeAsync(true)">New turn</button></div>
+            </div>
+            <div hidden="@ActiveGame.IsActive">
+                @if (Winner != null)
+                {
+                    <div>The game has ended!</div>
+                    <div>The winner is: <b>@Winner.Name</b></div>
+                }
+                else
+                {
+                    <div>It's a tie!</div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+    public int AmountOfTriples { get; set; }
+    public int AmountOfDoubles { get; set; }
+    public int AmountOfThrows { get; set; }
+
+    [Parameter]
+    public Turn CurrentTurn { get; set; }
+    [Parameter]
+    public Game ActiveGame { get; set; }
+    [Parameter]
+    public EventCallback<int> UpdateScoreBoard { get; set; }
+    [Parameter]
+    public EventCallback<Dictionary<string, int>> UpdateDoublesTriples { get; set; }
+    [Parameter]
+    public EventCallback<bool> ManualToggleTurns { get; set; }
+    [Parameter]
+    public EventCallback CancelSelection { get; set; }
+    [Parameter]
+    public Player CurrentPlayer { get; set; }
+    [Parameter]
+    public Player Winner { get; set; }
+
+    private void FillValues(int triples = 0, int doubles = 0)
+    {
+        Dictionary<string, int> values = new Dictionary<string, int>();
+        values.Add("Triples", triples);
+        values.Add("Doubles", doubles);
+        UpdateDoublesTriples.InvokeAsync(values);
+    }
+
+    private string GetSymbol(int target, Guid playerId)
+    {
+        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).OrderBy(t => Math.Abs((DateTime.Now - t.DateAndTime).Ticks)).FirstOrDefault();
+        if (entry != null)
+        {
+            var targetStatus = entry.Status;
+
+            if (targetStatus == 1) return "/";
+            else if (targetStatus == 2) return "x";
+            else return "⨂";
+        }
+        else return "";
+    }
+
+    private int GetScore(int target, Guid playerId)
+    {
+        var entry = ActiveGame.ScoreBoardEntries.Where(s => s.PlayerId == playerId && s.Target == target && s.GameId == ActiveGame.Id).OrderBy(t => Math.Abs((DateTime.Now - t.DateAndTime).Ticks)).FirstOrDefault();
+        if (entry != null)
+        {
+            return entry.Score;
+        }
+        else return 0;
+    }
+
+    private bool DisableInput(Guid playerId, int target)
+    {
+        var player = ActiveGame.Players.Where(p => p.Id == playerId).FirstOrDefault();
+        if (!ActiveGame.IsActive) return true;
+        if (player.HasTurn == true) return false;
+        else return true;
+    }
+
+    public async Task SelectThrows(int amountOfThrows)
+    {
+        AmountOfTriples = 0;
+        AmountOfDoubles = 0;
+        AmountOfThrows = amountOfThrows;
+
+        foreach (var target in ActiveGame.ScoreBoardEntries.Where(s => s.TurnId == ActiveGame.CurrentTurnId).ToList())
+        {
+            if (target.AmountClicks == 2) AmountOfDoubles++;
+            if (target.AmountClicks == 3) AmountOfTriples++;
+            if (target.AmountClicks == 4 || target.AmountClicks == 5)
+            {
+                AmountOfDoubles += 2;
+                AmountOfTriples += 1;
+            }
+            if (target.AmountClicks == 6)
+            {
+                AmountOfDoubles += 3;
+                AmountOfTriples += 2;
+            }
+        }
+
+        if (AmountOfDoubles == 0 && AmountOfTriples == 0) await CancelSelection.InvokeAsync();
+
+        await InvokeAsync(StateHasChanged);
+    }
+}

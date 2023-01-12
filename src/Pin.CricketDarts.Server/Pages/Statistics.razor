@@ -1,0 +1,154 @@
+﻿@page "/statistics"
+@inject NavigationManager navigationManager;
+@inject IStatisticsService statisticsService;
+
+<PageTitle>Statistics</PageTitle>
+<Heading Head="Statistics"></Heading>
+
+<div class="text-light">
+    <div class="mb-4 text-danger"><h2><b><u>Current Ongoing Games</u></b></h2></div>
+    @if (OngoingGames != null)
+    {
+        @if (OngoingGames.CurrentOngoingGames.Count() > 0)
+        {
+            <div class="row row-cols-0 row-cols-md-2 d-flex justify-content-center mb-4">
+                <div class="container">
+                    @foreach (var game in OngoingGames.CurrentOngoingGames)
+                    {
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col">@game.Players[0].Name</div>
+                                <div class="col">vs</div>
+                                <div class="col">@game.Players[1].Name</div>
+                            </div>
+                            <div class="row">
+                                <div class="col">Current score: <b>@game.Players[0].CurrentScore</b></div>
+                                <div class="col"></div>
+                                <div class="col">Current score: <b>@game.Players[1].CurrentScore</b></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="mb-4">No ongoing games yet!</div>
+        }
+    }
+    else
+    {
+        <div class="mb-4">No ongoing games yet!</div>
+    }
+    @if (Players != null)
+    {
+        <div class="mb-4 text-danger"><h2><b><u>Statistics</u></b></h2></div>
+        <div class="mb-4 text-danger"><h4>Most won games</h4></div>
+        <div class="row row-cols-0 row-cols-md-2 d-flex justify-content-center">
+            <div class="container">
+                @if (Players.Any(p => p.AmountWonGames > 0))
+                {
+                    int i = 1;
+                    @foreach (var player in Players.Where(p => p.AmountWonGames != 0).OrderByDescending(p => p.AmountWonGames))
+                    {
+                        @if (player.AmountWonGames != 0)
+                        {
+                            <div class="mb-4">
+                                <div class="row">
+                                    <div class="col">@(i ). @player.Name: <b>@player.AmountWonGames</b></div>
+                                </div>
+                            </div>
+                        }
+                        i++;
+                    }
+                }
+                else
+                {
+                    <div class="mb-4">No winners yet!</div>
+                }
+            </div>
+        </div>
+
+        <div class="mb-4 text-danger"><h4>Most triples</h4></div>
+        <div class="row row-cols-0 row-cols-md-2 d-flex justify-content-center">
+            <div class="container">
+                @if (Players.Any(p => p.TotalTriples > 0))
+                {
+                    int i = 1;
+                    @foreach (var player in Players.Where(t => t.TotalTriples != 0).OrderByDescending(p => p.TotalTriples))
+                    {
+                        @if (player.TotalTriples != 0)
+                        {
+                            <div class="mb-4">
+                                <div class="row">
+                                    <div class="col">@(i). @player.Name: <b>@player.TotalTriples</b></div>
+                                </div>
+                            </div>
+                        }
+                        i++;
+                    }
+                }
+                else
+                {
+                    <div class="mb-4">No triple scorers yet!</div>
+                }
+            </div>
+        </div>
+
+        <div class="mb-4 text-danger"><h4>Most doubles</h4></div>
+        <div class="row row-cols-0 row-cols-md-2 d-flex justify-content-center">
+            <div class="container">
+                @if (Players.Any(p => p.TotalDoubles > 0))
+                {
+                    int i = 1;
+                    @foreach (var player in Players.Where(t => t.TotalDoubles != 0).OrderByDescending(p => p.TotalDoubles))
+                    {
+                        @if (player.TotalDoubles != 0)
+                        {
+                            <div class="mb-4">
+                                <div class="row">
+                                    <div class="col">@(i). @player.Name: <b>@player.TotalDoubles</b></div>
+                                </div>
+                            </div>
+                        }
+                        i++;
+                    }
+                }
+                else
+                {
+                    <div class="mb-4">No double scorers yet!</div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+
+@code {
+    private HubConnection hubConnection;
+    public OngoingGames OngoingGames { get; set; }
+    public List<DartsPlayer> Players { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(navigationManager.ToAbsoluteUri("/statisticshub"))
+            .Build();
+
+        await hubConnection.StartAsync();
+
+        await statisticsService.SendStatistics();
+
+        hubConnection.On<OngoingGames>("ReceiveOngoingGames", (ongoingGames) =>
+        {
+            OngoingGames = ongoingGames;
+            StateHasChanged();
+        });
+
+        hubConnection.On<List<DartsPlayer>>("ReceiveAllPlayers", (players) =>
+        {
+            Players = players;
+            StateHasChanged();
+        });
+    }
+}
